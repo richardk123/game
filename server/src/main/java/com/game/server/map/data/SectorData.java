@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Richard Kolísek
@@ -53,7 +54,8 @@ public class SectorData
 			}
 		}
 
-		for (Integer key : idPosMap.keySet())
+		Set<Integer> keys = idPosMap.keySet();
+		for (Integer key : keys)
 		{
 			Point point = idPosMap.get(key);
 			for (SectorData newSector : result)
