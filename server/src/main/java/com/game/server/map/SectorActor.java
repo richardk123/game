@@ -70,7 +70,7 @@ public class SectorActor extends AbstractActor
 	public void sectorFind(final QueryMessage m)
 	{
 
-		final ResultMessage resultMessage = new ResultMessage();;
+		final ResultMessage resultMessage = new ResultMessage();
 
 		// do not have child sectors
 		if (squareActorRefMap.size() == 0)
@@ -188,8 +188,8 @@ public class SectorActor extends AbstractActor
 			}
 			else
 			{
-				ActorSelection root = getContext().actorSelection(ROOT_SECTOR_NAME);
-				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo()), 10000);
+				ActorSelection root = getContext().actorSelection("/user/" + ROOT_SECTOR_NAME);
+				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo()), 1000);
 				ExecutionContext ec = context().dispatcher();
 
 				createFuture.onSuccess(
@@ -198,8 +198,7 @@ public class SectorActor extends AbstractActor
 							@Override
 							public void onSuccess(Object o)
 							{
-								sectorData.getIdPosMap().remove(((PositionCreateMessage) o).getId());
-								LOG.info("removed: " + ((PositionCreateMessage) o).getId());
+								sectorData.getIdPosMap().remove(((PositionCreatedMessage) o).getId());
 							}
 						},
 						ec
