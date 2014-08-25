@@ -20,7 +20,7 @@ public class Main2
 
 	static final Logger LOG = Logger.getLogger(Main2.class);
 
-	public static final int COUNT = 101;
+	public static final int COUNT = 100;
 	public static final int SECTOR_SIZE_COEF = 1;
 
 	public static void main(String[] args)
@@ -38,7 +38,7 @@ public class Main2
 			for (int y = 0; y < COUNT; y++)
 			{
 				count++;
-				sector.tell(new PositionCreateMessage(count, new Point(x * SECTOR_SIZE_COEF, y * SECTOR_SIZE_COEF)), null);
+				sector.tell(new PositionCreateMessage(count, new Point(x * SECTOR_SIZE_COEF, y * SECTOR_SIZE_COEF), false), null);
 			}
 		}
 
@@ -89,7 +89,7 @@ public class Main2
 
 	public static float getRandom(int position)
 	{
-		float value = 50 + (float) (Math.random() * 30);
+		float value = 25 + (float) (Math.random() * 30);
 
 		if (value > COUNT)
 		{

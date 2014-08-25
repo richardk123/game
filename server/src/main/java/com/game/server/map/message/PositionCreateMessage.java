@@ -9,11 +9,13 @@ public class PositionCreateMessage
 {
 	private final int id;
 	private final Point point;
+	private final boolean needReply;
 
-	public PositionCreateMessage(int id, Point point)
+	public PositionCreateMessage(int id, Point point, boolean needReply)
 	{
 		this.id = id;
 		this.point = point;
+		this.needReply = needReply;
 	}
 
 	public int getId()
@@ -24,5 +26,10 @@ public class PositionCreateMessage
 	public Point getPoint()
 	{
 		return point;
+	}
+
+	public boolean isNeedReply()
+	{
+		return needReply;
 	}
 }

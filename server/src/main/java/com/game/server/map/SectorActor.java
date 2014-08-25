@@ -76,8 +76,9 @@ public class SectorActor extends AbstractActor
 		if (squareActorRefMap.size() == 0)
 		{
 			Map<Integer, Point> idPosMap = sectorData.getIdPosMap();
+			Set<Integer> ids = idPosMap.keySet();
 
-			for (Integer id : idPosMap.keySet())
+			for (Integer id : ids)
 			{
 				Point point = idPosMap.get(id);
 				boolean inSquare = m.getFindPointsInSquare().isInSquare(point);
@@ -189,7 +190,7 @@ public class SectorActor extends AbstractActor
 			else
 			{
 				ActorSelection root = getContext().actorSelection("/user/" + ROOT_SECTOR_NAME);
-				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo()), 1000);
+				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo(), true), 1000);
 				ExecutionContext ec = context().dispatcher();
 
 				createFuture.onSuccess(
@@ -256,7 +257,11 @@ public class SectorActor extends AbstractActor
 			}
 		}
 
-		sender().tell(new PositionCreatedMessage(message.getId()), self());
+
+		if (message.isNeedReply())
+		{
+			sender().tell(new PositionCreatedMessage(message.getId()), self());
+		}
 	}
 
 	private void positionDestroy(PositionDestroyMessage message)

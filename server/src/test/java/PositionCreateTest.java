@@ -32,7 +32,7 @@ public class PositionCreateTest
 			for (int y = 0; y < COUNT; y++)
 			{
 				count++;
-				sector.tell(new PositionCreateMessage(count, new Point(x * SECTOR_SIZE_COEF, y * SECTOR_SIZE_COEF)), null);
+				sector.tell(new PositionCreateMessage(count, new Point(x * SECTOR_SIZE_COEF, y * SECTOR_SIZE_COEF), false), null);
 			}
 		}
 
