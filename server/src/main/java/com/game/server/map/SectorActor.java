@@ -199,7 +199,8 @@ public class SectorActor extends AbstractActor
 							@Override
 							public void onSuccess(Object o)
 							{
-								sectorData.getIdPosMap().remove(((PositionCreatedMessage) o).getId());
+								Integer id = ((PositionCreatedMessage) o).getId();
+								self().tell(new PositionDestroyMessage(id), null);
 							}
 						},
 						ec
