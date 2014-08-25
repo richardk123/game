@@ -40,7 +40,7 @@ public class SectorActor extends AbstractActor
 	static final Logger LOG = Logger.getLogger(SectorActor.class);
 
 	public static final int MAX_OBJECT_COUNT = 2500;
-	public static final int SUB_SECTOR_COUNT = 2;   // must %2 == 0
+	public static final int SUB_SECTOR_COUNT = 4;   // must %2 == 0
 	public static final String ROOT_SECTOR_NAME = "rootSector";
 
 	private final SectorData sectorData;
@@ -190,7 +190,7 @@ public class SectorActor extends AbstractActor
 			else
 			{
 				ActorSelection root = getContext().actorSelection("/user/" + ROOT_SECTOR_NAME);
-				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo(), true), 1000);
+				Future<Object> createFuture = Patterns.ask(root, new PositionCreateMessage(message.getId(), message.getTo(), true), 10000);
 				ExecutionContext ec = context().dispatcher();
 
 				createFuture.onSuccess(
