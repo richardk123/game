@@ -20,7 +20,7 @@ public class Main2
 
 	static final Logger LOG = Logger.getLogger(Main2.class);
 
-	public static final int COUNT = 101;
+	public static final int COUNT = 100;
 	public static final int SECTOR_SIZE_COEF = 1;
 
 	public static void main(String[] args)
