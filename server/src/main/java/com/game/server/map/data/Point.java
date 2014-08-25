@@ -9,9 +9,7 @@ public class Point
 	private float y;
 
 	public Point()
-	{
-
-	}
+	{ }
 
 	public Point(float x, float y)
 	{
