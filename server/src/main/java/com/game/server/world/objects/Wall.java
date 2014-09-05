@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.game.server.world.geometry.AABB;
-import com.game.server.world.map.CollidableObject;
+import com.game.server.world.map.GameObject;
 import com.game.server.world.map.behaviour.MoveBehaviour;
 import com.game.server.world.map.behaviour.Behavior;
 
 /**
  * @author dohnal
  */
-public class Wall extends CollidableObject
+public class Wall extends GameObject
 {
 	private double width;
 	private double height;

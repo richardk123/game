@@ -2,8 +2,8 @@ package com.game.server;
 
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.DynamicAABBTree;
+import com.game.server.world.map.GameObject;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.objects.Wall;
 
@@ -28,7 +28,7 @@ public class GUI extends JFrame
 
 	private static Random generator = new Random();
 
-	public GUI(WorldMap<CollidableObject> map)
+	public GUI(WorldMap<GameObject> map)
 	{
 		super("Game simulation");
 
@@ -45,9 +45,9 @@ public class GUI extends JFrame
 
 		private int height;
 
-		private WorldMap<CollidableObject> map;
+		private WorldMap<GameObject> map;
 
-		public Canvas(WorldMap<CollidableObject> map, int width, int height)
+		public Canvas(WorldMap<GameObject> map, int width, int height)
 		{
 			this.map = map;
 			this.width = width;
@@ -87,7 +87,7 @@ public class GUI extends JFrame
 
 		private void renderObjects(final Graphics g)
 		{
-			for (CollidableObject object : map)
+			for (GameObject object : map)
 			{
 				AABB aabb = object.getAABB();
 
@@ -111,9 +111,9 @@ public class GUI extends JFrame
 		new GUI(createMap());
 	}
 
-	private static WorldMap<CollidableObject> createMap()
+	private static WorldMap<GameObject> createMap()
 	{
-		final WorldMap<CollidableObject> map = new DynamicAABBTree<>();
+		final WorldMap<GameObject> map = new DynamicAABBTree<>();
 
 		// add walls to map
 		for (int i = 0; i < 5; i++)

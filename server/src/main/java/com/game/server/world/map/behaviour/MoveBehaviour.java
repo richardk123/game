@@ -8,7 +8,6 @@ package com.game.server.world.map.behaviour;
 import java.util.List;
 
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
@@ -30,17 +29,13 @@ public class MoveBehaviour implements Behavior<MoveBehaviour.MoveMessage, GameOb
 	{
 
 		// tell others that i collide with them
-		if (self instanceof CollidableObject)
+
+		WorldMap<GameObject> worldMap = GameService.get().getWorldMap();
+		List<GameObject> collisions = worldMap.find(self.getAABB());
+
+		for (GameObject collision : collisions)
 		{
-			CollidableObject collidable = (CollidableObject) self;
-
-			WorldMap<CollidableObject> worldMap = GameService.get().getWorldMap();
-			List<CollidableObject> collisions = worldMap.find(collidable.getAABB());
-
-			for (CollidableObject collision : collisions)
-			{
-				collision.tell(new CollideBehaviour.CollideMessage(), self);
-			}
+			collision.tell(new CollideBehaviour.CollideMessage(), self);
 		}
 
 		// move my self
@@ -54,10 +49,7 @@ public class MoveBehaviour implements Behavior<MoveBehaviour.MoveMessage, GameOb
 		}
 
 		// update him in collidable world map
-		if (self instanceof CollidableObject)
-		{
-			GameService.get().getWorldMap().update((CollidableObject) self);
-		}
+		GameService.get().getWorldMap().update(self);
 
 
 	}

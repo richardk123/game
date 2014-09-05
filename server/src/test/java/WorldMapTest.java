@@ -1,7 +1,7 @@
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.DynamicAABBTree;
+import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.map.behaviour.CreateBehaviour;
@@ -33,12 +33,12 @@ public class WorldMapTest
 	@Test
 	public void addObjectTest()
 	{
-		WorldMap<CollidableObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
 		SomeObject object = new SomeObject(5, 10);
 		object.tell(new CreateBehaviour.CreateMessage(new Vector2(0, 0)), null);
 
-		List<CollidableObject> result = map.find(new AABB(new Vector2(10, 0), 6));
+		List<GameObject> result = map.find(new AABB(new Vector2(10, 0), 6));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -53,13 +53,13 @@ public class WorldMapTest
 	@Test
 	public void removeObjectTest()
 	{
-		WorldMap<CollidableObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
 		SomeObject object = new SomeObject(5, 10);
 		object.tell(new CreateBehaviour.CreateMessage(new Vector2(0, 0)), null);
 		object.tell(new RemoveBehaviour.RemoveMessage(), null);
 
-		List<CollidableObject> result = map.find(new AABB(new Vector2(10, 0), 8));
+		List<GameObject> result = map.find(new AABB(new Vector2(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -68,12 +68,12 @@ public class WorldMapTest
 	@Test
 	public void updateObjectTest()
 	{
-		WorldMap<CollidableObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
 		SomeObject object = new SomeObject(5, 10);
 		object.tell(new CreateBehaviour.CreateMessage(new Vector2(0, 0)), null);
 
-		List<CollidableObject> result = map.find(new AABB(new Vector2(10, 0), 6));
+		List<GameObject> result = map.find(new AABB(new Vector2(10, 0), 6));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -89,12 +89,12 @@ public class WorldMapTest
 	@Test
 	public void clearMapTest()
 	{
-		WorldMap<CollidableObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
 		SomeObject object = new SomeObject(5, 10);
 		object.tell(new CreateBehaviour.CreateMessage(new Vector2(0, 0)), null);
 
-		List<CollidableObject> result = map.find(new AABB(new Vector2(10, 0), 8));
+		List<GameObject> result = map.find(new AABB(new Vector2(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());

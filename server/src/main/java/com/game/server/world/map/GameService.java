@@ -6,7 +6,7 @@ package com.game.server.world.map;
 public class GameService
 {
 	private static GameService gameService;
-	private WorldMap<CollidableObject> worldMap;
+	private WorldMap<GameObject> worldMap;
 
 	public synchronized static GameService get()
 	{
@@ -24,7 +24,7 @@ public class GameService
 		return gameService;
 	}
 
-	public WorldMap<CollidableObject> getWorldMap()
+	public WorldMap<GameObject> getWorldMap()
 	{
 		if (worldMap == null)
 		{

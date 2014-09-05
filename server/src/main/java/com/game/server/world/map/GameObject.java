@@ -7,6 +7,7 @@ package com.game.server.world.map;
 import java.util.List;
 import java.util.UUID;
 
+import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.behaviour.Behavior;
 import com.game.server.world.map.behaviour.Message;
@@ -49,6 +50,11 @@ public abstract class GameObject
 	{
 		return position.getY();
 	}
+
+	/**
+	 * Get an AABB from this collidable.
+	 */
+	public abstract AABB getAABB();
 
 	public Vector2 getPosition()
 	{

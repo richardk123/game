@@ -1,7 +1,6 @@
 package data;
 
 import com.game.server.world.geometry.AABB;
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.GameObject;
 import com.game.server.world.map.behaviour.CollideBehaviour;
 import com.game.server.world.map.behaviour.CreateBehaviour;
@@ -16,7 +15,7 @@ import java.util.List;
 /**
  * @author dohnal
  */
-public class SomeObject extends CollidableObject
+public class SomeObject extends GameObject
 {
 	private double width;
 	private double height;

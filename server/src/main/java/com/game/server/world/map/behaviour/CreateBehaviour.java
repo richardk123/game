@@ -1,7 +1,6 @@
 package com.game.server.world.map.behaviour;
 
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 
@@ -22,10 +21,7 @@ public class CreateBehaviour implements Behavior<CreateBehaviour.CreateMessage, 
 		self.setPosition(message.getVector2());
 
 		//add to collidable world map
-		if (self instanceof CollidableObject)
-		{
-			GameService.get().getWorldMap().add((CollidableObject) self);
-		}
+		GameService.get().getWorldMap().add(self);
 	}
 
 	public static class CreateMessage implements Message

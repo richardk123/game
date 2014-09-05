@@ -22,7 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * This class uses a self-balancing binary tree to store the AABBs.  The AABBs are sorted using the perimeter.
  * The perimeter heuristic is better than area for 2D because axis aligned segments have zero area.
  */
-public class DynamicAABBTree<T extends CollidableObject> implements WorldMap<T>
+public class DynamicAABBTree<T extends GameObject> implements WorldMap<T>
 {
 	protected final double expansion = 0;
 

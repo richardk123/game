@@ -1,6 +1,5 @@
 package com.game.server.world.map.behaviour;
 
-import com.game.server.world.map.CollidableObject;
 import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 
@@ -20,10 +19,7 @@ public class RemoveBehaviour implements Behavior<RemoveBehaviour.RemoveMessage, 
 	public void behave(RemoveMessage message, GameObject sender, GameObject self)
 	{
 		//add to collidable world map
-		if (self instanceof CollidableObject)
-		{
-			GameService.get().getWorldMap().remove((CollidableObject) self);
-		}
+		GameService.get().getWorldMap().remove(self);
 	}
 
 	public static class RemoveMessage implements Message
