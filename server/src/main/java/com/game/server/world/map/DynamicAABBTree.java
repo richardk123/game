@@ -8,9 +8,13 @@ import com.game.server.world.geometry.AABB;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Stack;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Implementation of an axis-aligned bounding box tree.
@@ -20,7 +24,7 @@ import java.util.UUID;
  */
 public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 {
-	protected final double expansion = 0.2;
+	protected final double expansion = 0;
 
 	/**
 	 * Represents a node in the tree.
@@ -63,6 +67,8 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 	/** Id to node map for fast lookup */
 	protected Map<UUID, Node> proxyMap;
 
+	private ReentrantLock lock = new ReentrantLock();
+
 	public DynamicAABBTree()
 	{
 		this(64);
@@ -83,6 +89,269 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 
 	@Override
 	public void add(T object)
+	{
+		try
+		{
+			lock.lock();
+
+			internalAdd(object);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void remove(T object)
+	{
+		try
+		{
+			lock.lock();
+
+			internalRemove(object);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void update(T object)
+	{
+		try
+		{
+			lock.lock();
+
+			// get the node from the map
+			Node node = this.proxyMap.get(object.getId());
+
+			if (node != null)
+			{
+				// get the new aabb
+				AABB aabb = object.getAABB();
+
+				// see if the old aabb contains the new one
+				if (node.aabb.contains(aabb))
+				{
+					// if so, don't do anything
+					return;
+				}
+
+				// otherwise expand the new aabb
+				aabb.expand(this.expansion);
+
+				// remove the current node from the tree
+				this.remove(node);
+
+				// set the new aabb
+				node.aabb = aabb;
+
+				// reinsert the node
+				this.insert(node);
+			}
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public void clear()
+	{
+		try
+		{
+			lock.lock();
+
+			this.proxyList.clear();
+			this.proxyMap.clear();
+			this.root = null;
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public List<T> find(AABB aabb)
+	{
+		try
+		{
+			lock.lock();
+
+			return this.findNonRecursive(aabb, root);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public Iterator<AABB> getAABBIterator()
+	{
+		return new AABBIterator(root);
+	}
+
+	@Override
+	public Iterator<T> iterator()
+	{
+		return new ObjectIterator(root);
+	}
+
+	private class ObjectIterator implements Iterator<T>
+	{
+		private Node currentNode;
+		private Stack<Node> visiting;
+		private Stack<Boolean> visitingRightChild;
+
+		public ObjectIterator(final Node node)
+		{
+			this.currentNode = node;
+			visiting = new Stack<>();
+			visitingRightChild = new Stack<>();
+		}
+
+		@Override
+		public boolean hasNext()
+		{
+			return (currentNode != null);
+		}
+
+		@Override
+		public T next()
+		{
+			if (!hasNext())
+			{
+				throw new NoSuchElementException();
+			}
+
+			// at beginning of iterator
+			if (visiting.empty())
+			{
+				visiting.push(currentNode);
+			}
+
+			Node node = visiting.pop();
+
+			if (node.isLeaf())
+			{
+				T result = node.object;
+
+				// need to visit the left subtree first, then the right
+				// since a stack is a LIFO, push the right subtree first, then
+				// the left.  Only push non-null trees
+				if (node.right != null)
+				{
+					visiting.push(node.right);
+				}
+
+				if (node.left != null)
+				{
+					visiting.push(node.left);
+				}
+
+				// may not have pushed anything.  If so, we are at the end
+				// no more nodes to visit
+				if (visiting.empty())
+				{
+					currentNode = null;
+				}
+
+				return result;
+			}
+			else
+			{
+				// need to visit the left subtree first, then the right
+				// since a stack is a LIFO, push the right subtree first, then
+				// the left.  Only push non-null trees
+				if (node.right != null)
+				{
+					visiting.push(node.right);
+				}
+
+				if (node.left != null)
+				{
+					visiting.push(node.left);
+				}
+
+				// may not have pushed anything.  If so, we are at the end
+				// no more nodes to visit
+				if (visiting.empty())
+				{
+					currentNode = null;
+				}
+
+				return next();
+			}
+		}
+	}
+
+	private class AABBIterator implements Iterator<AABB>
+	{
+		private Node currentNode;
+		private Stack<Node> visiting;
+		private Stack<Boolean> visitingRightChild;
+
+		public AABBIterator(final Node node)
+		{
+			this.currentNode = node;
+			visiting = new Stack<>();
+			visitingRightChild = new Stack<>();
+		}
+
+		@Override
+		public boolean hasNext()
+		{
+			return (currentNode != null);
+		}
+
+		@Override
+		public AABB next()
+		{
+			if (!hasNext())
+			{
+				throw new NoSuchElementException();
+			}
+
+			// at beginning of iterator
+			if (visiting.empty())
+			{
+				visiting.push(currentNode);
+			}
+
+			Node node = visiting.pop();
+
+			AABB result = node.aabb;
+
+			// need to visit the left subtree first, then the right
+			// since a stack is a LIFO, push the right subtree first, then
+			// the left.  Only push non-null trees
+			if (node.right != null)
+			{
+				visiting.push(node.right);
+			}
+
+			if (node.left != null)
+			{
+				visiting.push(node.left);
+			}
+
+			// may not have pushed anything.  If so, we are at the end
+			// no more nodes to visit
+			if (visiting.empty())
+			{
+				currentNode = null;
+			}
+
+			return result;
+		}
+	}
+
+	protected void internalAdd(T object)
 	{
 		// get an aabb for the object
 		AABB aabb = object.getAABB();
@@ -105,8 +374,7 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 		this.insert(node);
 	}
 
-	@Override
-	public void remove(T object)
+	protected void internalRemove(T object)
 	{
 		// find the node in the map
 		Node node = this.proxyMap.get(object.getId());
@@ -122,52 +390,6 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 			// remove the node from the map
 			this.proxyMap.remove(object.getId());
 		}
-	}
-
-	@Override
-	public void update(T object)
-	{
-		// get the node from the map
-		Node node = this.proxyMap.get(object.getId());
-
-		if (node != null)
-		{
-			// get the new aabb
-			AABB aabb = object.getAABB();
-
-			// see if the old aabb contains the new one
-			if (node.aabb.contains(aabb))
-			{
-				// if so, don't do anything
-				return;
-			}
-
-			// otherwise expand the new aabb
-			aabb.expand(this.expansion);
-
-			// remove the current node from the tree
-			this.remove(node);
-
-			// set the new aabb
-			node.aabb = aabb;
-
-			// reinsert the node
-			this.insert(node);
-		}
-	}
-
-	@Override
-	public void clear()
-	{
-		this.proxyList.clear();
-		this.proxyMap.clear();
-		this.root = null;
-	}
-
-	@Override
-	public List<T> find(AABB aabb)
-	{
-		return this.findNonRecursive(aabb, root);
 	}
 
 	/**
@@ -304,6 +526,7 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 			this.root = newParent;
 		}
 
+
 		// fix the heights and aabbs
 		node = item.parent;
 
@@ -371,6 +594,7 @@ public class DynamicAABBTree<T extends Collidable> implements WorldMap<T>
 			}
 			// set the siblings parent to the grandparent
 			other.parent = grandparent;
+
 
 			// finally rebalance the tree
 			Node n = grandparent;

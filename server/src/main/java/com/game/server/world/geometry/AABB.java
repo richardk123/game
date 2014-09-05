@@ -369,6 +369,11 @@ public class AABB
 		this.max = max;
 	}
 
+	public Vector2 getCenter()
+	{
+		return new Vector2((min.getX() + max.getX()) * 0.5, (min.getY() + max.getY()) * 0.5);
+	}
+
 	@Override
 	public String toString()
 	{

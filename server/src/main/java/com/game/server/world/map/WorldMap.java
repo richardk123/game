@@ -2,12 +2,13 @@ package com.game.server.world.map;
 
 import com.game.server.world.geometry.AABB;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author dohnal
  */
-public interface WorldMap<T extends Collidable>
+public interface WorldMap<T extends Collidable> extends Iterable<T>
 {
 	/**
 	 * Adds a new object to the map.
@@ -34,4 +35,9 @@ public interface WorldMap<T extends Collidable>
 	 * Find all objects which lies or overlaps given AABB
 	 */
 	public List<T> find(AABB aabb);
+
+	/**
+	 * Only for debugging
+	 */
+	public Iterator<AABB> getAABBIterator();
 }
