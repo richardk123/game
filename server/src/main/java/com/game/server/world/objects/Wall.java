@@ -5,8 +5,11 @@ import java.util.List;
 
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.map.GameObject;
+import com.game.server.world.map.behaviour.CollideBehaviour;
+import com.game.server.world.map.behaviour.CreateBehaviour;
 import com.game.server.world.map.behaviour.MoveBehaviour;
 import com.game.server.world.map.behaviour.Behavior;
+import com.game.server.world.map.behaviour.RemoveBehaviour;
 
 /**
  * @author dohnal
@@ -45,6 +48,9 @@ public class Wall extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<Behavior>();
 		behaviors.add(new MoveBehaviour());
+		behaviors.add(new RemoveBehaviour());
+		behaviors.add(new CreateBehaviour());
+		behaviors.add(new CollideBehaviour());
 		return behaviors;
 	}
 }

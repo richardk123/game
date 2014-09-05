@@ -36,11 +36,6 @@ public abstract class GameObject
 		return id;
 	}
 
-	public void setId(UUID id)
-	{
-		this.id = id;
-	}
-
 	public double getX()
 	{
 		return position.getX();
@@ -54,6 +49,7 @@ public abstract class GameObject
 	/**
 	 * Get an AABB from this collidable.
 	 */
+	@Nullable
 	public abstract AABB getAABB();
 
 	public Vector2 getPosition()

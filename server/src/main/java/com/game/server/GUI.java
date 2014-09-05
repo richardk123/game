@@ -1,21 +1,22 @@
 package com.game.server;
 
-import com.game.server.world.geometry.AABB;
-import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.DynamicAABBTree;
-import com.game.server.world.map.GameObject;
-import com.game.server.world.map.WorldMap;
-import com.game.server.world.objects.Wall;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import com.game.server.world.geometry.AABB;
+import com.game.server.world.geometry.Vector2;
+import com.game.server.world.map.GameObject;
+import com.game.server.world.map.GameService;
+import com.game.server.world.map.WorldMap;
+import com.game.server.world.map.behaviour.CreateBehaviour;
+import com.game.server.world.map.behaviour.MoveBehaviour;
+import com.game.server.world.objects.Wall;
 
 /**
  * @author dohnal
@@ -113,7 +114,7 @@ public class GUI extends JFrame
 
 	private static WorldMap<GameObject> createMap()
 	{
-		final WorldMap<GameObject> map = new DynamicAABBTree<>();
+		final WorldMap<GameObject> map = GameService.get().getWorldMap();
 
 		// add walls to map
 		for (int i = 0; i < 5; i++)
@@ -121,9 +122,8 @@ public class GUI extends JFrame
 			int x = generator.nextInt(GUI.WIDTH - 200) + 100;
 			int y = generator.nextInt(GUI.HEIGHT - 200) + 100;
 
-/*			Wall wall = new Wall(x, y, 50, 50);
-
-			map.add(wall);
+			Wall wall = new Wall(50, 50);
+			wall.tell(new CreateBehaviour.CreateMessage(new Vector2(x, y)), null);
 
 			// add ability to move walls
 			new Timer().scheduleAtFixedRate(new TimerTask()
@@ -131,11 +131,11 @@ public class GUI extends JFrame
 				@Override
 				public void run()
 				{
-					wall.move(getRandomMove());
+					wall.tell(new MoveBehaviour.MoveMessage(getRandomMove()), null);
 
 					map.update(wall);
 				}
-			}, 200, 200);*/
+			}, 200, 200);
 		}
 		return map;
 	}
