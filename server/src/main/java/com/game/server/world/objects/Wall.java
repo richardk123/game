@@ -1,32 +1,23 @@
 package com.game.server.world.objects;
 
-import com.game.server.world.geometry.AABB;
-import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.Collidable;
-import com.game.server.world.map.Movable;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.UUID;
+import com.game.server.world.geometry.AABB;
+import com.game.server.world.map.CollidableObject;
+import com.game.server.world.map.behaviour.MoveBehaviour;
+import com.game.server.world.map.behaviour.Behavior;
 
 /**
  * @author dohnal
  */
-public class Wall implements Collidable, Movable
+public class Wall extends CollidableObject
 {
-	private Vector2 position;
-
 	private double width;
-
 	private double height;
 
-	private UUID id;
-
-	private AABB aabb;
-
-	public Wall(double x, double y, double width, double height)
+	public Wall(double width, double height)
 	{
-		this.id = UUID.randomUUID();
-
-		this.position = new Vector2(x, y);
 		this.width = width;
 		this.height = height;
 	}
@@ -35,26 +26,8 @@ public class Wall implements Collidable, Movable
 	public AABB getAABB()
 	{
 		return new AABB(
-				position.getX() - width * 0.5, position.getY() - height * 0.5,
-				position.getX() + width * 0.5, position.getY() + height * 0.5);
-	}
-
-	@Override
-	public UUID getId()
-	{
-		return id;
-	}
-
-	@Override
-	public double getX()
-	{
-		return position.getX();
-	}
-
-	@Override
-	public double getY()
-	{
-		return position.getY();
+				getPosition().getX() - width * 0.5, getPosition().getY() - height * 0.5,
+				getPosition().getX() + width * 0.5, getPosition().getY() + height * 0.5);
 	}
 
 	public double getWidth()
@@ -68,14 +41,10 @@ public class Wall implements Collidable, Movable
 	}
 
 	@Override
-	public void move(double x, double y)
+	protected List<Behavior> getBehaviours()
 	{
-		position.add(x, y);
-	}
-
-	@Override
-	public void move(Vector2 vector)
-	{
-		position.add(vector);
+		List<Behavior> behaviors = new ArrayList<Behavior>();
+		behaviors.add(new MoveBehaviour());
+		return behaviors;
 	}
 }

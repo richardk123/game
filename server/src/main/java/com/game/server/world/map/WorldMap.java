@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author dohnal
  */
-public interface WorldMap<T extends Collidable> extends Iterable<T>
+public interface WorldMap<T extends CollidableObject> extends Iterable<T>
 {
 	/**
 	 * Adds a new object to the map.

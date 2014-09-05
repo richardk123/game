@@ -1,32 +1,29 @@
 package data;
 
 import com.game.server.world.geometry.AABB;
-import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.Collidable;
-import com.game.server.world.map.Movable;
+import com.game.server.world.map.CollidableObject;
+import com.game.server.world.map.GameObject;
+import com.game.server.world.map.behaviour.CollideBehaviour;
+import com.game.server.world.map.behaviour.CreateBehaviour;
+import com.game.server.world.map.behaviour.Message;
+import com.game.server.world.map.behaviour.MoveBehaviour;
+import com.game.server.world.map.behaviour.Behavior;
+import com.game.server.world.map.behaviour.RemoveBehaviour;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author dohnal
  */
-public class SomeObject implements Collidable, Movable
+public class SomeObject extends CollidableObject
 {
-	private Vector2 position;
-
 	private double width;
-
 	private double height;
 
-	private UUID id;
 
-	private AABB aabb;
-
-	public SomeObject(double x, double y, double width, double height)
+	public SomeObject(double width, double height)
 	{
-		this.id = UUID.randomUUID();
-
-		this.position = new Vector2(x, y);
 		this.width = width;
 		this.height = height;
 	}
@@ -35,26 +32,19 @@ public class SomeObject implements Collidable, Movable
 	public AABB getAABB()
 	{
 		return new AABB(
-				position.getX() - width * 0.5, position.getY() - height * 0.5,
-				position.getX() + width * 0.5, position.getY() + height * 0.5);
+				getPosition().getX() - width * 0.5, getPosition().getY() - height * 0.5,
+				getPosition().getX() + width * 0.5, getPosition().getY() + height * 0.5);
 	}
 
 	@Override
-	public UUID getId()
+	public List<Behavior> getBehaviours()
 	{
-		return id;
-	}
-
-	@Override
-	public double getX()
-	{
-		return position.getX();
-	}
-
-	@Override
-	public double getY()
-	{
-		return position.getY();
+		List<Behavior> behaviors = new ArrayList<>();
+		behaviors.add(new MoveBehaviour());
+		behaviors.add(new RemoveBehaviour());
+		behaviors.add(new CreateBehaviour());
+		behaviors.add(new CollideBehaviour());
+		return behaviors;
 	}
 
 	public double getWidth()
@@ -65,17 +55,5 @@ public class SomeObject implements Collidable, Movable
 	public double getHeight()
 	{
 		return height;
-	}
-
-	@Override
-	public void move(double x, double y)
-	{
-		position.add(x, y);
-	}
-
-	@Override
-	public void move(Vector2 vector)
-	{
-		position.add(vector);
 	}
 }
