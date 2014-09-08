@@ -1,22 +1,23 @@
 package com.game.server;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
-
+import com.game.server.world.behavior.KeyInputBehavior;
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
-import com.game.server.world.map.behaviour.CreateBehaviour;
-import com.game.server.world.map.behaviour.MoveBehaviour;
+import com.game.server.world.objects.EventManager;
+import com.game.server.world.objects.Player;
 import com.game.server.world.objects.Wall;
+import org.apache.log4j.Logger;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import java.awt.Graphics;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * @author dohnal
@@ -24,6 +25,8 @@ import com.game.server.world.objects.Wall;
 
 public class GUI extends JFrame
 {
+	private static final Logger LOG = Logger.getLogger(GUI.class);
+
 	private static final int WIDTH = 800;
 	private static final int HEIGHT = 600;
 
@@ -38,6 +41,10 @@ public class GUI extends JFrame
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().add(new Canvas(map, WIDTH, HEIGHT));
+
+		// add event manager game object
+		EventManager eventManager = new EventManager();
+		addKeyListener(eventManager.getBehavior(KeyInputBehavior.class));
 	}
 
 	protected class Canvas extends JComponent
@@ -53,6 +60,7 @@ public class GUI extends JFrame
 			this.map = map;
 			this.width = width;
 			this.height = height;
+
 
 			// TODO: repaint only on events in map
 			new Timer().scheduleAtFixedRate(new TimerTask()
@@ -116,46 +124,16 @@ public class GUI extends JFrame
 	{
 		final WorldMap<GameObject> map = GameService.get().getWorldMap();
 
+		map.add(new Player(new Vector2(GUI.WIDTH / 2 - 10, GUI.HEIGHT / 2 - 10)));
+
 		// add walls to map
 		for (int i = 0; i < 5; i++)
 		{
 			int x = generator.nextInt(GUI.WIDTH - 200) + 100;
 			int y = generator.nextInt(GUI.HEIGHT - 200) + 100;
 
-			Wall wall = new Wall(50, 50);
-			wall.tell(new CreateBehaviour.CreateMessage(new Vector2(x, y)), null);
-
-			// add ability to move walls
-			new Timer().scheduleAtFixedRate(new TimerTask()
-			{
-				@Override
-				public void run()
-				{
-					wall.tell(new MoveBehaviour.MoveMessage(getRandomMove()), null);
-
-					map.update(wall);
-				}
-			}, 200, 200);
+			map.add(new Wall(new Vector2(x, y), 50, 50));
 		}
 		return map;
-	}
-
-	private static List<Vector2> getMoves()
-	{
-		List<Vector2> moves = new ArrayList<>();
-
-		moves.add(new Vector2(0, 5));
-		moves.add(new Vector2(0, -5));
-		moves.add(new Vector2(5, 0));
-		moves.add(new Vector2(-5, 0));
-
-		return moves;
-	}
-
-	private static Vector2 getRandomMove()
-	{
-		List<Vector2> moves = getMoves();
-
-		return moves.get(generator.nextInt(moves.size()));
 	}
 }

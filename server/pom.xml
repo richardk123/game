@@ -8,6 +8,7 @@
   <groupId>com.game.server</groupId>
   <name>Game server</name>
   <version>1.0</version>
+  <packaging>war</packaging>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,6 +20,30 @@
           <groupId>com.typesafe.akka</groupId>
           <artifactId>akka-actor_2.10</artifactId>
           <version>2.3.4</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.eclipse.jetty.websocket</groupId>
+          <artifactId>websocket-api</artifactId>
+          <version>9.2.2.v20140723</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.eclipse.jetty.websocket</groupId>
+          <artifactId>websocket-server</artifactId>
+          <version>9.2.2.v20140723</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.eclipse.jetty.websocket</groupId>
+          <artifactId>websocket-client</artifactId>
+          <version>9.2.2.v20140723</version>
+      </dependency>
+
+      <dependency>
+          <groupId>com.google.code.findbugs</groupId>
+          <artifactId>jsr305</artifactId>
+          <version>2.0.0</version>
       </dependency>
 
       <dependency>
@@ -55,6 +80,28 @@
           <compilerArgs>
             <arg>-Xlint</arg>
           </compilerArgs>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+          <webappDirectory>${project.build.directory}/${project.artifactId}</webappDirectory>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>9.2.2.v20140723</version>
+        <configuration>
+          <useTestClasspath>false</useTestClasspath>
+          <webApp>
+            <contextPath>/</contextPath>
+          </webApp>
         </configuration>
       </plugin>
     </plugins>

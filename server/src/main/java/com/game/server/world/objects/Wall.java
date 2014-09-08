@@ -1,16 +1,12 @@
 package com.game.server.world.objects;
 
+import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.geometry.AABB;
+import com.game.server.world.geometry.Vector2;
+import com.game.server.world.map.GameObject;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.game.server.world.geometry.AABB;
-import com.game.server.world.map.GameObject;
-import com.game.server.world.map.behaviour.CollideBehaviour;
-import com.game.server.world.map.behaviour.CreateBehaviour;
-import com.game.server.world.map.behaviour.MoveBehaviour;
-import com.game.server.world.map.behaviour.Behavior;
-import com.game.server.world.map.behaviour.RemoveBehaviour;
-
 /**
  * @author dohnal
  */
@@ -19,8 +15,10 @@ public class Wall extends GameObject
 	private double width;
 	private double height;
 
-	public Wall(double width, double height)
+	public Wall(Vector2 position, double width, double height)
 	{
+		setPosition(position);
+
 		this.width = width;
 		this.height = height;
 	}
@@ -47,10 +45,7 @@ public class Wall extends GameObject
 	protected List<Behavior> getBehaviours()
 	{
 		List<Behavior> behaviors = new ArrayList<Behavior>();
-		behaviors.add(new MoveBehaviour());
-		behaviors.add(new RemoveBehaviour());
-		behaviors.add(new CreateBehaviour());
-		behaviors.add(new CollideBehaviour());
+
 		return behaviors;
 	}
 }

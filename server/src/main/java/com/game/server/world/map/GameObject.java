@@ -4,31 +4,34 @@ package com.game.server.world.map;
  * @author dohnal
  */
 
-import java.util.List;
-import java.util.UUID;
-
+import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.base.Message;
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.behaviour.Behavior;
-import com.game.server.world.map.behaviour.Message;
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import org.apache.log4j.Logger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents all game objects.
  */
 public abstract class GameObject
 {
-
 	static final Logger LOG = Logger.getLogger(GameObject.class);
 
 	private UUID id;
 	private Vector2 position;
 
+	private List<Behavior> behaviors;
+
 	public GameObject()
 	{
 		this.id = UUID.randomUUID();
+
+		behaviors = getBehaviours();
 	}
 
 	public UUID getId()
@@ -65,36 +68,34 @@ public abstract class GameObject
 	@Nullable
 	protected abstract List<Behavior> getBehaviours();
 
-
-	public void tell(@NotNull Message message, @Nullable GameObject sender)
+	@Nullable
+	@SuppressWarnings("unchecked")
+	public <T extends Behavior> T getBehavior(Class<T> behavior)
 	{
-		List<Behavior> behaviors = getBehaviours();
-
-		boolean behaviourFound = false;
-
-		for (Behavior behavior : behaviors)
+		if (behaviors != null)
 		{
-			if (behavior.getMessageType().isAssignableFrom(message.getClass()))
+			for (Behavior b : behaviors)
 			{
-				behaviourFound = true;
-				LOG.info(
-						String.format("behaviour found! message %s from: %s to: %s",
-								message.getClass().getSimpleName(),
-								sender == null ? "null" : sender.toString(),
-								this.toString())
-				);
-				behavior.behave(message, sender, this);
+				if (b.getClass().equals(behavior))
+				{
+					return (T)b;
+				}
 			}
 		}
 
-		if (!behaviourFound)
+		return null;
+	}
+
+	public void tell(@Nonnull Message message, @Nullable GameObject sender)
+	{
+		for (Behavior behavior : behaviors)
 		{
-			LOG.info(
-					String.format("behaviour not found! message %s from: %s to: %s",
-							message.getClass().getSimpleName(),
-							sender == null ? "null" : sender.toString(),
-							this.toString())
-			);
+			if (behavior.isDefinedAt(message))
+			{
+				behavior.setCurrentSender(sender);
+
+				behavior.apply(message);
+			}
 		}
 	}
 

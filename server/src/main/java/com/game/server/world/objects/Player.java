@@ -1,5 +1,6 @@
-package data;
+package com.game.server.world.objects;
 
+import com.game.server.world.behavior.PlayerMoveBehavior;
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
@@ -11,18 +12,17 @@ import java.util.List;
 /**
  * @author dohnal
  */
-public class SomeObject extends GameObject
+public class Player extends GameObject
 {
 	private double width;
 	private double height;
 
-
-	public SomeObject(Vector2 position, double width, double height)
+	public Player(Vector2 position)
 	{
 		setPosition(position);
 
-		this.width = width;
-		this.height = height;
+		this.width = 10;
+		this.height = 10;
 	}
 
 	@Override
@@ -33,14 +33,6 @@ public class SomeObject extends GameObject
 				getPosition().getX() + width * 0.5, getPosition().getY() + height * 0.5);
 	}
 
-	@Override
-	public List<Behavior> getBehaviours()
-	{
-		List<Behavior> behaviors = new ArrayList<>();
-
-		return behaviors;
-	}
-
 	public double getWidth()
 	{
 		return width;
@@ -49,5 +41,15 @@ public class SomeObject extends GameObject
 	public double getHeight()
 	{
 		return height;
+	}
+
+	@Override
+	protected List<Behavior> getBehaviours()
+	{
+		List<Behavior> behaviors = new ArrayList<Behavior>();
+
+		behaviors.add(new PlayerMoveBehavior(this, 0.5));
+
+		return behaviors;
 	}
 }
