@@ -1,5 +1,7 @@
 package com.game.server.world.map;
 
+import com.game.server.world.object.base.GameObject;
+
 /**
  * @author Richard Kolísek
  */

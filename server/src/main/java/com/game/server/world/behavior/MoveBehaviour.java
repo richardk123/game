@@ -3,8 +3,8 @@ package com.game.server.world.behavior;
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.geometry.Vector2;
-import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
+import com.game.server.world.object.base.GameObject;
 
 /**
  * @author dohnal

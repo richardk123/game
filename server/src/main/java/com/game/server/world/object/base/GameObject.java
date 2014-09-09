@@ -1,4 +1,4 @@
-package com.game.server.world.map;
+package com.game.server.world.object.base;
 
 /**
  * @author dohnal
@@ -8,6 +8,7 @@ import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
+import com.game.server.world.material.base.Material;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -23,9 +24,12 @@ public abstract class GameObject
 	static final Logger LOG = Logger.getLogger(GameObject.class);
 
 	private UUID id;
+
 	private Vector2 position;
 
 	private List<Behavior> behaviors;
+
+	private Material material;
 
 	public GameObject()
 	{
@@ -49,11 +53,11 @@ public abstract class GameObject
 		return position.getY();
 	}
 
-	/**
-	 * Get an AABB from this collidable.
-	 */
 	@Nullable
-	public abstract AABB getAABB();
+	public AABB getAABB()
+	{
+		return material != null ? material.getAABB() : null;
+	}
 
 	public Vector2 getPosition()
 	{
@@ -105,4 +109,13 @@ public abstract class GameObject
 		return this.getClass().getSimpleName() + ":" + getId().toString();
 	}
 
+	public Material getMaterial()
+	{
+		return material;
+	}
+
+	public void setMaterial(Material material)
+	{
+		this.material = material;
+	}
 }

@@ -1,9 +1,8 @@
-package com.game.server.world.objects;
+package com.game.server.world.object;
 
 import com.game.server.world.behavior.KeyInputBehavior;
 import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.geometry.AABB;
-import com.game.server.world.map.GameObject;
+import com.game.server.world.object.base.GameObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,12 +12,6 @@ import java.util.List;
  */
 public class EventManager extends GameObject
 {
-	@Override
-	public AABB getAABB()
-	{
-		return null;
-	}
-
 	@Override
 	protected List<Behavior> getBehaviours()
 	{

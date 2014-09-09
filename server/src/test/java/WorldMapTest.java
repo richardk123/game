@@ -1,9 +1,9 @@
 import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.DynamicAABBTree;
-import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
+import com.game.server.world.object.base.GameObject;
 import data.SomeObject;
 import org.junit.Test;
 

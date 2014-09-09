@@ -1,6 +1,7 @@
 package com.game.server.world.map;
 
 import com.game.server.world.geometry.AABB;
+import com.game.server.world.object.base.GameObject;
 
 import java.util.Iterator;
 import java.util.List;

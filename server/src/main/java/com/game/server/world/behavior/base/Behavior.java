@@ -1,8 +1,8 @@
 package com.game.server.world.behavior.base;
 
-import com.game.server.world.map.GameObject;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
+import com.game.server.world.object.base.GameObject;
 import scala.PartialFunction;
 import scala.runtime.BoxedUnit;
 

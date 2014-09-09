@@ -1,7 +1,7 @@
 package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.BehaviorBuilder;
-import com.game.server.world.map.GameObject;
+import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
 import java.awt.event.KeyEvent;
