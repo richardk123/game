@@ -1,10 +1,10 @@
 package com.game.server.world.material;
 
-import com.game.server.world.geometry.AABB;
+import java.awt.*;
+
 import com.game.server.world.material.base.Material;
 import com.game.server.world.object.base.GameObject;
-
-import java.awt.Color;
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author dohnal
@@ -32,11 +32,11 @@ public class RectangleMaterial implements Material
 	}
 
 	@Override
-	public AABB getAABB()
+	public com.vividsolutions.jts.geom.Envelope getEnvelope()
 	{
-		return new AABB(
-				self.getPosition().getX() - width * 0.5, self.getPosition().getY() - height * 0.5,
-				self.getPosition().getX() + width * 0.5, self.getPosition().getY() + height * 0.5);
+		return new Envelope(
+				self.getPosition().getX() - width * 0.5, self.getPosition().getX() + width * 0.5,
+				self.getPosition().getY() - height * 0.5, self.getPosition().getY() + height * 0.5);
 	}
 
 	public Color getColor()

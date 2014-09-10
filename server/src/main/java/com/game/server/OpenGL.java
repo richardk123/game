@@ -1,7 +1,6 @@
 package com.game.server;
 
 import com.game.server.world.behavior.KeyInputBehavior;
-import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
@@ -12,6 +11,7 @@ import com.game.server.world.object.Player;
 import com.game.server.world.object.Wall;
 import com.game.server.world.object.base.GameObject;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.vividsolutions.jts.geom.Envelope;
 import org.apache.log4j.Logger;
 
 import javax.media.opengl.GL;
@@ -87,9 +87,9 @@ public class OpenGL
 			gl2.glColor3d(color.getRed() / 256.0, color.getGreen() / 256.0, color.getBlue() / 256.0);
 		}
 
-		AABB aabb = material.getAABB();
+		Envelope aabb = material.getEnvelope();
 
-		gl2.glRectd(aabb.getMin().getX(), aabb.getMax().getY(), aabb.getMax().getX(), aabb.getMin().getY());
+		gl2.glRectd(aabb.getMinX(), aabb.getMaxY(), aabb.getMaxX(), aabb.getMinY());
 
 		gl2.glEnd();
 	}

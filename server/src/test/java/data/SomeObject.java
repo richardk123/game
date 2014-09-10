@@ -1,9 +1,9 @@
 package data;
 
 import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.object.base.GameObject;
+import com.vividsolutions.jts.geom.Envelope;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,11 @@ public class SomeObject extends GameObject
 	}
 
 	@Override
-	public AABB getAABB()
+	public Envelope getEnvelope()
 	{
-		return new AABB(
-				getPosition().getX() - width * 0.5, getPosition().getY() - height * 0.5,
-				getPosition().getX() + width * 0.5, getPosition().getY() + height * 0.5);
+		return new Envelope(
+				getPosition().getX() - width * 0.5, getPosition().getX() + width * 0.5,
+				getPosition().getY() - height * 0.5, getPosition().getY() + height * 0.5);
 	}
 
 	@Override

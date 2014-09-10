@@ -47,4 +47,19 @@ public abstract class MoveBehaviour extends Behavior
 			return move.getY();
 		}
 	}
+
+	public static class CollisionEnterMessage extends Message
+	{
+
+	}
+
+	public static class CollisionMessage
+	{
+
+	}
+
+	public static class CollisionLeaveMessage
+	{
+
+	}
 }

@@ -30,7 +30,7 @@ public class GameService
 	{
 		if (worldMap == null)
 		{
-			worldMap = new DynamicAABBTree<>();
+			worldMap = new QuadTreeImpl();
 		}
 		return worldMap;
 	}

@@ -6,9 +6,9 @@ package com.game.server.world.object.base;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.Message;
-import com.game.server.world.geometry.AABB;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.material.base.Material;
+import com.vividsolutions.jts.geom.Envelope;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -54,9 +54,9 @@ public abstract class GameObject
 	}
 
 	@Nullable
-	public AABB getAABB()
+	public Envelope getEnvelope()
 	{
-		return material != null ? material.getAABB() : null;
+		return material != null ? material.getEnvelope() : null;
 	}
 
 	public Vector2 getPosition()

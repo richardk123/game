@@ -1,7 +1,7 @@
 package com.game.server.world.map;
 
-import com.game.server.world.geometry.AABB;
 import com.game.server.world.object.base.GameObject;
+import com.vividsolutions.jts.geom.Envelope;
 
 import java.util.Iterator;
 import java.util.List;
@@ -35,10 +35,6 @@ public interface WorldMap<T extends GameObject> extends Iterable<T>
 	/**
 	 * Find all objects which lies or overlaps given AABB
 	 */
-	public List<T> find(AABB aabb);
+	public List<T> find(Envelope envelope);
 
-	/**
-	 * Only for debugging
-	 */
-	public Iterator<AABB> getAABBIterator();
 }
