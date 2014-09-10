@@ -6,30 +6,38 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.index.quadtree.Quadtree;
 
 /**
  * @author Richard Kolísek
  */
-public class QuadTreeImpl<T extends GameObject> implements WorldMap<T>
+public class GameObjectMap<T> implements WorldMap<T>
 {
 	private Quadtree quadtree = new Quadtree();
 	Map<T, Envelope> objectEnvelopeMap = new HashMap<>();
+	private final MapAdapter<T> adapter;
 
+	public GameObjectMap(MapAdapter<T> adapter)
+	{
+		this.adapter = adapter;
+	}
 
 	@Override
 	public void add(T object)
 	{
-		quadtree.insert(object.getBoundingBox(), object);
-		objectEnvelopeMap.put(object, object.getBoundingBox());
+		Envelope envelope = adapter.getEnvelope(object);
+
+		quadtree.insert(envelope, object);
+		objectEnvelopeMap.put(object, envelope);
 	}
 
 	@Override
 	public void remove(T object)
 	{
-		quadtree.remove(object.getBoundingBox(), object);
+		Envelope envelope = adapter.getEnvelope(object);
+
+		quadtree.remove(envelope, object);
 		objectEnvelopeMap.remove(object);
 	}
 
@@ -55,13 +63,21 @@ public class QuadTreeImpl<T extends GameObject> implements WorldMap<T>
 
 		for (T object : nonFiltered)
 		{
-			if (envelope.intersects(object.getBoundingBox()))
+			Envelope e = adapter.getEnvelope(object);
+
+			if (envelope.intersects(e))
 			{
 				result.add(object);
 			}
 		}
 
 		return result;
+	}
+
+	@Override
+	public MapAdapter<T> getAdapter()
+	{
+		return adapter;
 	}
 
 	@Override

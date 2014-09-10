@@ -1,6 +1,7 @@
 package com.game.server.world.object;
 
 import com.game.server.world.behavior.PlayerMoveBehavior;
+import com.game.server.world.behavior.ViewBehaviour;
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.geometry.Vector2;
 import com.game.server.world.material.RectangleMaterial;

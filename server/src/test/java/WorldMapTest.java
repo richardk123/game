@@ -1,11 +1,10 @@
 import java.util.List;
 
 import com.game.server.world.geometry.Vector2;
+import com.game.server.world.map.GameObjectMap;
 import com.game.server.world.map.GameService;
-import com.game.server.world.map.QuadTreeImpl;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.object.base.GameObject;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import data.SomeObject;
 import org.junit.Test;
@@ -22,7 +21,16 @@ public class WorldMapTest
 	@Test
 	public void createMapTest()
 	{
-		WorldMap<SomeObject> map = new QuadTreeImpl();
+		WorldMap<SomeObject> map = new GameObjectMap<SomeObject>(
+				new WorldMap.MapAdapter<SomeObject>()
+				{
+					@Override
+					public Envelope getEnvelope(SomeObject value)
+					{
+						return value.getBoundingBox();
+					}
+				}
+		);
 
 		assertNotNull(map);
 	}
@@ -31,7 +39,7 @@ public class WorldMapTest
 	@Test
 	public void addObjectTest()
 	{
-		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
 		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
 		map.add(object);
@@ -51,7 +59,7 @@ public class WorldMapTest
 	@Test
 	public void removeObjectTest()
 	{
-		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
 		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
 		map.add(object);
@@ -66,7 +74,7 @@ public class WorldMapTest
 	@Test
 	public void updateObjectTest()
 	{
-		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
 		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
 		map.add(object);
@@ -88,7 +96,7 @@ public class WorldMapTest
 	@Test
 	public void clearMapTest()
 	{
-		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
+		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
 		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
 		map.add(object);

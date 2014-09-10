@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author dohnal
  */
-public interface WorldMap<T extends GameObject> extends Iterable<T>
+public interface WorldMap<T> extends Iterable<T>
 {
 	/**
 	 * Adds a new object to the map.
@@ -36,5 +36,17 @@ public interface WorldMap<T extends GameObject> extends Iterable<T>
 	 * Find all objects which lies or overlaps given AABB
 	 */
 	public List<T> find(Envelope envelope);
+
+
+	public MapAdapter<T> getAdapter();
+
+	public static interface MapAdapter<T>
+	{
+		/**
+		 * get bounding box
+		 */
+		Envelope getEnvelope(T value);
+
+	}
 
 }

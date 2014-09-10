@@ -165,7 +165,7 @@ public class OpenGL
 
 	private static WorldMap<GameObject> createMap()
 	{
-		final WorldMap<GameObject> map = GameService.get().getWorldMap();
+		final WorldMap<GameObject> map = GameService.get().getWorldCollisionMap();
 
 		map.add(new Player(new Vector2(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
 

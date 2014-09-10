@@ -11,7 +11,7 @@ import scala.runtime.BoxedUnit;
  */
 public abstract class Behavior
 {
-	private GameObject self;
+	private final GameObject self;
 	private GameObject currentSender;
 	private PartialFunction<Object, BoxedUnit> behaviour;
 
@@ -52,7 +52,7 @@ public abstract class Behavior
 
 	protected WorldMap<GameObject> getWorld()
 	{
-		return GameService.get().getWorldMap();
+		return GameService.get().getWorldCollisionMap();
 	}
 
 	protected void behaviour(PartialFunction<Object, BoxedUnit> behaviour)
