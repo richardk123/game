@@ -4,17 +4,17 @@ package com.game.server.world.object.base;
  * @author dohnal
  */
 
-import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.behavior.base.Message;
-import com.game.server.world.geometry.Vector2;
-import com.game.server.world.material.base.Material;
-import com.vividsolutions.jts.geom.Envelope;
-import org.apache.log4j.Logger;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.UUID;
+
+import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.base.Message;
+import com.game.server.world.material.base.Material;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import org.apache.log4j.Logger;
 
 /**
  * Represents all game objects.
@@ -25,11 +25,13 @@ public abstract class GameObject
 
 	private UUID id;
 
-	private Vector2 position;
+	private Coordinate coordinate;
 
 	private List<Behavior> behaviors;
 
 	private Material material;
+
+	private Envelope boundingBoxMoving;
 
 	public GameObject()
 	{
@@ -45,12 +47,12 @@ public abstract class GameObject
 
 	public double getX()
 	{
-		return position.getX();
+		return coordinate.getOrdinate(Coordinate.X);
 	}
 
 	public double getY()
 	{
-		return position.getY();
+		return coordinate.getOrdinate(Coordinate.Y);
 	}
 
 	/**
@@ -62,14 +64,9 @@ public abstract class GameObject
 		return material != null ? material.getBoundingBox() : null;
 	}
 
-	public Vector2 getPosition()
+	public Envelope getBoundingBoxMoving()
 	{
-		return position;
-	}
-
-	public void setPosition(Vector2 position)
-	{
-		this.position = position;
+		return boundingBoxMoving;
 	}
 
 	@Nullable
@@ -120,5 +117,29 @@ public abstract class GameObject
 	public void setMaterial(Material material)
 	{
 		this.material = material;
+	}
+
+
+	public void move(double x, double y)
+	{
+		coordinate = new Coordinate(getX() + x, getY() + y);
+		recalculateBoundingBoxMoving();
+	}
+
+	private void recalculateBoundingBoxMoving()
+	{
+		boundingBoxMoving = new Envelope(getBoundingBox().getMinX() + getX(), getBoundingBox().getMaxX() + getX(),
+				getBoundingBox().getMinY() + getY(), getBoundingBox().getMaxY() + getY());
+	}
+
+	public Coordinate getCoordinate()
+	{
+		return coordinate;
+	}
+
+	public void setCoordinate(Coordinate coordinate)
+	{
+		this.coordinate = coordinate;
+		recalculateBoundingBoxMoving();
 	}
 }

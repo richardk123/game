@@ -1,7 +1,6 @@
 package com.game.server;
 
 import com.game.server.world.behavior.KeyInputBehavior;
-import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.material.RectangleMaterial;
@@ -11,6 +10,7 @@ import com.game.server.world.object.Player;
 import com.game.server.world.object.Wall;
 import com.game.server.world.object.base.GameObject;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import org.apache.log4j.Logger;
 
@@ -167,7 +167,7 @@ public class OpenGL
 	{
 		final WorldMap<GameObject> map = GameService.get().getWorldCollisionMap();
 
-		map.add(new Player(new Vector2(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
+		map.add(new Player(new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
 
 		// add walls to map
 		for (int i = 0; i < 5; i++)
@@ -175,7 +175,7 @@ public class OpenGL
 			int x = generator.nextInt(OpenGL.WIDTH - 200) + 100;
 			int y = generator.nextInt(OpenGL.HEIGHT - 200) + 100;
 
-			map.add(new Wall(new Vector2(x, y)));
+			map.add(new Wall(new Coordinate(x, y)));
 		}
 		return map;
 	}

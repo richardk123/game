@@ -2,7 +2,6 @@ package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.Message;
-import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.GameService;
 import com.game.server.world.object.base.GameObject;
 
@@ -18,33 +17,30 @@ public abstract class MoveBehaviour extends Behavior
 
 	protected void moveHandler(final MoveMessage moveMessage)
 	{
-		getSelf().getPosition().add(moveMessage.getX(), moveMessage.getY());
+		getSelf().move(moveMessage.getX(), moveMessage.getY());
 
 		GameService.get().getWorldCollisionMap().update(getSelf());
 	}
 
 	public static class MoveMessage extends Message
 	{
-		private final Vector2 move;
-
-		public MoveMessage(Vector2 move)
-		{
-			this.move = move;
-		}
+		private final double x;
+		private final double y;
 
 		public MoveMessage(double x, double y)
 		{
-			move = new Vector2(x, y);
+			this.x = x;
+			this.y = y;
 		}
 
 		public double getX()
 		{
-			return move.getX();
+			return x;
 		}
 
 		public double getY()
 		{
-			return move.getY();
+			return y;
 		}
 	}
 

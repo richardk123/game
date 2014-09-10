@@ -3,9 +3,9 @@ package com.game.server.world.object;
 import com.game.server.world.behavior.PlayerMoveBehavior;
 import com.game.server.world.behavior.ViewBehaviour;
 import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.geometry.Vector2;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
+import com.vividsolutions.jts.geom.Coordinate;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -16,10 +16,10 @@ import java.util.List;
  */
 public class Player extends GameObject
 {
-	public Player(Vector2 position)
+	public Player(Coordinate position)
 	{
-		setPosition(position);
 		setMaterial(new RectangleMaterial(this, Color.yellow, 10, 10));
+		setCoordinate(position);
 	}
 
 	@Override

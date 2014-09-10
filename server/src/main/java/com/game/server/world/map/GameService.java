@@ -39,7 +39,7 @@ public class GameService
 						@Override
 						public Envelope getEnvelope(GameObject value)
 						{
-							return value.getBoundingBox();
+							return value.getBoundingBoxMoving();
 						}
 					}
 			);

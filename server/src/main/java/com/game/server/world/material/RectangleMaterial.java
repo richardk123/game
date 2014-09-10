@@ -35,8 +35,8 @@ public class RectangleMaterial implements Material
 	public com.vividsolutions.jts.geom.Envelope getBoundingBox()
 	{
 		return new Envelope(
-				self.getPosition().getX() - width * 0.5, self.getPosition().getX() + width * 0.5,
-				self.getPosition().getY() - height * 0.5, self.getPosition().getY() + height * 0.5);
+				self.getX() - width * 0.5, self.getX() + width * 0.5,
+				self.getY() - height * 0.5, self.getY() + height * 0.5);
 	}
 
 	public Color getColor()

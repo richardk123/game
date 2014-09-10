@@ -1,12 +1,12 @@
 package data;
 
-import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.geometry.Vector2;
-import com.game.server.world.object.base.GameObject;
-import com.vividsolutions.jts.geom.Envelope;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.object.base.GameObject;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author dohnal
@@ -17,9 +17,9 @@ public class SomeObject extends GameObject
 	private double height;
 
 
-	public SomeObject(Vector2 position, double width, double height)
+	public SomeObject(Coordinate position, double width, double height)
 	{
-		setPosition(position);
+		setCoordinate(position);
 
 		this.width = width;
 		this.height = height;
@@ -28,9 +28,8 @@ public class SomeObject extends GameObject
 	@Override
 	public Envelope getBoundingBox()
 	{
-		return new Envelope(
-				getPosition().getX() - width * 0.5, getPosition().getX() + width * 0.5,
-				getPosition().getY() - height * 0.5, getPosition().getY() + height * 0.5);
+		return new Envelope(getX() - width * 0.5, getX() + width * 0.5,
+				getY() - height * 0.5, getY() + height * 0.5);
 	}
 
 	@Override

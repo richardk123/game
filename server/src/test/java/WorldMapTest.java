@@ -1,10 +1,10 @@
 import java.util.List;
 
-import com.game.server.world.geometry.Vector2;
 import com.game.server.world.map.GameObjectMap;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.object.base.GameObject;
+import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import data.SomeObject;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class WorldMapTest
 					@Override
 					public Envelope getEnvelope(SomeObject value)
 					{
-						return value.getBoundingBox();
+						return value.getBoundingBoxMoving();
 					}
 				}
 		);
@@ -41,15 +41,15 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
-		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
-		List<GameObject> result = map.find(createEnvelope(new Vector2(10, 0), 6));
+		List<GameObject> result = map.find(createEnvelope(new Coordinate(10, 0), 6));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
 
-		result = map.find(createEnvelope(new Vector2(10, 0), 8));
+		result = map.find(createEnvelope(new Coordinate(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -61,11 +61,11 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
-		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 		map.remove(object);
 
-		List<GameObject> result = map.find(createEnvelope(new Vector2(10, 0), 8));
+		List<GameObject> result = map.find(createEnvelope(new Coordinate(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
@@ -76,17 +76,17 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
-		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
-		List<GameObject> result = map.find(createEnvelope(new Vector2(10, 0), 6));
+		List<GameObject> result = map.find(createEnvelope(new Coordinate(10, 0), 6));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
 
-		object.getPosition().add(new Vector2(2, 0));
+		object.move(2, 0);
 		map.update(object);
-		result = map.find(createEnvelope(new Vector2(10, 0), 6));
+		result = map.find(createEnvelope(new Coordinate(10, 0), 6));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -98,10 +98,10 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldCollisionMap();
 
-		SomeObject object = new SomeObject(new Vector2(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
-		List<GameObject> result = map.find(createEnvelope(new Vector2(10, 0), 8));
+		List<GameObject> result = map.find(createEnvelope(new Coordinate(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(1, result.size());
@@ -109,13 +109,13 @@ public class WorldMapTest
 
 		map.clear();
 
-		result = map.find(createEnvelope(new Vector2(10, 0), 8));
+		result = map.find(createEnvelope(new Coordinate(10, 0), 8));
 
 		assertNotNull(result);
 		assertEquals(0, result.size());
 	}
 
-	public Envelope createEnvelope(Vector2 center, double radius)
+	public Envelope createEnvelope(Coordinate center, double radius)
 	{
 
 		if (radius < 0) throw new IllegalArgumentException("Invalid radius");
@@ -126,7 +126,8 @@ public class WorldMapTest
 		}
 		else
 		{
-			return new Envelope(center.getX() - radius, center.getX() + radius,  center.getY() - radius, center.getY() + radius);
+			return new Envelope(center.getOrdinate(Coordinate.X) - radius, center.getOrdinate(Coordinate.X) + radius,  
+					center.getOrdinate(Coordinate.Y) - radius, center.getOrdinate(Coordinate.Y) + radius);
 		}
 		
 	}
