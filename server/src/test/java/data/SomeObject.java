@@ -19,10 +19,11 @@ public class SomeObject extends GameObject
 
 	public SomeObject(Coordinate position, double width, double height)
 	{
-		setCoordinate(position);
 
 		this.width = width;
 		this.height = height;
+
+		setCoordinate(position);
 	}
 
 	@Override

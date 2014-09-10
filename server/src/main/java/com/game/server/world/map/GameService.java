@@ -57,7 +57,7 @@ public class GameService
 						@Override
 						public Envelope getEnvelope(ViewBehaviour value)
 						{
-							return value.getViewBox();
+							return value.getViewBoxMoving();
 						}
 					}
 			);

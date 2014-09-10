@@ -6,6 +6,7 @@ import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class Player extends GameObject
 		List<Behavior> behaviors = new ArrayList<>();
 
 		behaviors.add(new PlayerMoveBehavior(this, 1));
+		behaviors.add(new ViewBehaviour(this, new Envelope(-10, 10, -10, 10)));
 
 		return behaviors;
 	}

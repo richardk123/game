@@ -85,4 +85,10 @@ public class GameObjectMap<T> implements WorldMap<T>
 	{
 		return quadtree.queryAll().iterator();
 	}
+
+	@Override
+	public int getSize()
+	{
+		return objectEnvelopeMap.size();
+	}
 }

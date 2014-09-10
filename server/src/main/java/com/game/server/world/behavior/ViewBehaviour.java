@@ -18,19 +18,26 @@ public class ViewBehaviour extends Behavior
 {
 
 	private final Envelope viewBox;
+	private Envelope viewBoxMoving;
+
 	private List<ViewChangedMessage> mineViewMessages = new ArrayList<>();
 
 	public ViewBehaviour(GameObject self, Envelope viewBox)
 	{
 		super(self);
 		this.viewBox = viewBox;
+		recalculateViewBoxMoving();
 
-		behaviour(BehaviorBuilder.match(Message.class, this::handleMessage)
+		GameService.get().getWorldViewMap().add(this);
+
+		behaviour(BehaviorBuilder
+				.match(MoveBehaviour.MoveMessage.class, this::moveHandler)
 				.match(ViewChangedMessage.class, this::handleViewChangedMessage)
+				.match(Message.class, this::handleMessage)
 				.build());
 	}
 
-	protected void handleMessage(Message message)
+	protected void handleMessage(final Message message)
 	{
 
 		// handle only mine messages
@@ -39,7 +46,7 @@ public class ViewBehaviour extends Behavior
 			return;
 		}
 
-		List<ViewBehaviour> views = GameService.get().getWorldViewMap().find(viewBox);
+		List<ViewBehaviour> views = GameService.get().getWorldViewMap().find(getViewBoxMoving());
 
 		// send to all object that i see mine messages
 		for (ViewBehaviour go : views)
@@ -55,6 +62,14 @@ public class ViewBehaviour extends Behavior
 		}
 	}
 
+	protected void moveHandler(final MoveBehaviour.MoveMessage moveMessage)
+	{
+		recalculateViewBoxMoving();
+		GameService.get().getWorldViewMap().update(this);
+
+		handleMessage(moveMessage);
+	}
+
 	protected void handleViewChangedMessage(ViewChangedMessage message)
 	{
 		this.mineViewMessages.add(message);
@@ -68,6 +83,17 @@ public class ViewBehaviour extends Behavior
 	public Envelope getViewBox()
 	{
 		return viewBox;
+	}
+
+	private void recalculateViewBoxMoving()
+	{
+		viewBoxMoving = new Envelope(getSelf().getX() + viewBox.getMinX(), getSelf().getX() + viewBox.getMaxX(),
+				getSelf().getY() + viewBox.getMinY(), getSelf().getY() + viewBox.getMaxY());
+	}
+
+	public Envelope getViewBoxMoving()
+	{
+		return viewBoxMoving;
 	}
 
 	/**

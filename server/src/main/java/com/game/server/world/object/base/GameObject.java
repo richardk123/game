@@ -36,8 +36,6 @@ public abstract class GameObject
 	public GameObject()
 	{
 		this.id = UUID.randomUUID();
-
-		behaviors = getBehaviours();
 	}
 
 	public UUID getId()
@@ -72,13 +70,23 @@ public abstract class GameObject
 	@Nullable
 	protected abstract List<Behavior> getBehaviours();
 
+	private List<Behavior> getBehaviorsLazy()
+	{
+		if (behaviors == null)
+		{
+			behaviors = getBehaviours();
+		}
+
+		return behaviors;
+	}
+
 	@Nullable
 	@SuppressWarnings("unchecked")
 	public <T extends Behavior> T getBehavior(Class<T> behavior)
 	{
-		if (behaviors != null)
+		if (getBehaviorsLazy() != null)
 		{
-			for (Behavior b : behaviors)
+			for (Behavior b : getBehaviorsLazy())
 			{
 				if (b.getClass().equals(behavior))
 				{
@@ -92,15 +100,11 @@ public abstract class GameObject
 
 	public void tell(@Nonnull Message message, @Nullable GameObject sender)
 	{
-		for (Behavior behavior : behaviors)
-		{
-			if (behavior.isDefinedAt(message))
-			{
-				behavior.setCurrentSender(sender);
+		getBehaviorsLazy().stream().filter(behavior -> behavior.isDefinedAt(message)).forEach(behavior -> {
+			behavior.setCurrentSender(sender);
 
-				behavior.apply(message);
-			}
-		}
+			behavior.apply(message);
+		});
 	}
 
 	@Override

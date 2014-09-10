@@ -37,6 +37,7 @@ public interface WorldMap<T> extends Iterable<T>
 	 */
 	public List<T> find(Envelope envelope);
 
+	public int getSize();
 
 	public MapAdapter<T> getAdapter();
 
@@ -48,5 +49,6 @@ public interface WorldMap<T> extends Iterable<T>
 		Envelope getEnvelope(T value);
 
 	}
+
 
 }
