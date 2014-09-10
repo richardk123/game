@@ -8,7 +8,6 @@ import com.game.server.world.behavior.base.BehaviorBuilder;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.map.GameService;
 import com.game.server.world.object.base.GameObject;
-import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
@@ -31,7 +30,7 @@ public class ViewBehaviour extends Behavior
 		GameService.get().getWorldViewMap().add(this);
 
 		behaviour(BehaviorBuilder
-				.match(MoveBehaviour.MoveMessage.class, this::moveHandler)
+				.match(MoveBehaviour.PositionChangedMessage.class, this::positionChangeMessage)
 				.match(ViewChangedMessage.class, this::handleViewChangedMessage)
 				.match(Message.class, this::handleMessage)
 				.build());
@@ -62,7 +61,7 @@ public class ViewBehaviour extends Behavior
 		}
 	}
 
-	protected void moveHandler(final MoveBehaviour.MoveMessage moveMessage)
+	protected void positionChangeMessage(final MoveBehaviour.PositionChangedMessage moveMessage)
 	{
 		recalculateViewBoxMoving();
 		GameService.get().getWorldViewMap().update(this);
