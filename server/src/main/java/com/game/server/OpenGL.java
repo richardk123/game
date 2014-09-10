@@ -87,7 +87,7 @@ public class OpenGL
 			gl2.glColor3d(color.getRed() / 256.0, color.getGreen() / 256.0, color.getBlue() / 256.0);
 		}
 
-		Envelope aabb = material.getEnvelope();
+		Envelope aabb = material.getBoundingBox();
 
 		gl2.glRectd(aabb.getMinX(), aabb.getMaxY(), aabb.getMaxX(), aabb.getMinY());
 

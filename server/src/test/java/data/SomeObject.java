@@ -26,7 +26,7 @@ public class SomeObject extends GameObject
 	}
 
 	@Override
-	public Envelope getEnvelope()
+	public Envelope getBoundingBox()
 	{
 		return new Envelope(
 				getPosition().getX() - width * 0.5, getPosition().getX() + width * 0.5,

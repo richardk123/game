@@ -32,7 +32,7 @@ public class RectangleMaterial implements Material
 	}
 
 	@Override
-	public com.vividsolutions.jts.geom.Envelope getEnvelope()
+	public com.vividsolutions.jts.geom.Envelope getBoundingBox()
 	{
 		return new Envelope(
 				self.getPosition().getX() - width * 0.5, self.getPosition().getX() + width * 0.5,

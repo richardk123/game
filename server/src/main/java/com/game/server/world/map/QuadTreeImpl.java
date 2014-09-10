@@ -22,14 +22,14 @@ public class QuadTreeImpl<T extends GameObject> implements WorldMap<T>
 	@Override
 	public void add(T object)
 	{
-		quadtree.insert(object.getEnvelope(), object);
-		objectEnvelopeMap.put(object, object.getEnvelope());
+		quadtree.insert(object.getBoundingBox(), object);
+		objectEnvelopeMap.put(object, object.getBoundingBox());
 	}
 
 	@Override
 	public void remove(T object)
 	{
-		quadtree.remove(object.getEnvelope(), object);
+		quadtree.remove(object.getBoundingBox(), object);
 		objectEnvelopeMap.remove(object);
 	}
 
@@ -55,7 +55,7 @@ public class QuadTreeImpl<T extends GameObject> implements WorldMap<T>
 
 		for (T object : nonFiltered)
 		{
-			if (envelope.intersects(object.getEnvelope()))
+			if (envelope.intersects(object.getBoundingBox()))
 			{
 				result.add(object);
 			}

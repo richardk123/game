@@ -53,10 +53,13 @@ public abstract class GameObject
 		return position.getY();
 	}
 
+	/**
+	 *  get box used for collisions
+	 */
 	@Nullable
-	public Envelope getEnvelope()
+	public Envelope getBoundingBox()
 	{
-		return material != null ? material.getEnvelope() : null;
+		return material != null ? material.getBoundingBox() : null;
 	}
 
 	public Vector2 getPosition()
