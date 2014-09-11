@@ -151,7 +151,7 @@ public class OpenGL
 		});
 
 		// add event manager game object
-		EventManager eventManager = new EventManager(1L);
+		EventManager eventManager = new EventManager();
 
 		glcanvas.addKeyListener(eventManager.getBehavior(KeyInputBehavior.class));
 
@@ -191,7 +191,7 @@ public class OpenGL
 	{
 		WorldMap<GameObject> world = GameService.get().getWorldMap();
 
-		world.add(new Player(1L, new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
+		world.add(new Player(new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
 
 		// add walls to map
 		for (int i = 0; i < 5; i++)
@@ -199,7 +199,7 @@ public class OpenGL
 			int x = generator.nextInt(OpenGL.WIDTH - 200) + 100;
 			int y = generator.nextInt(OpenGL.HEIGHT - 200) + 100;
 
-			world.add(new Wall((long)(i + 1), new Coordinate(x, y)));
+			world.add(new Wall(new Coordinate(x, y)));
 		}
 
 		return world;

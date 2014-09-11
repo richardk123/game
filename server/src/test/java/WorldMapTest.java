@@ -32,7 +32,7 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
-		SomeObject object = new SomeObject(1L, new Coordinate(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
 		List<GameObject> result = map.findObjects(createEnvelope(new Coordinate(10, 0), 6));
@@ -52,7 +52,7 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
-		SomeObject object = new SomeObject(1L, new Coordinate(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 		map.remove(object);
 
@@ -67,7 +67,7 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
-		SomeObject object = new SomeObject(1L, new Coordinate(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
 		List<GameObject> result = map.findObjects(createEnvelope(new Coordinate(10, 0), 6));
@@ -89,7 +89,7 @@ public class WorldMapTest
 	{
 		WorldMap<GameObject> map = GameService.getNew().getWorldMap();
 
-		SomeObject object = new SomeObject(1L, new Coordinate(0, 0), 5, 10);
+		SomeObject object = new SomeObject(new Coordinate(0, 0), 5, 10);
 		map.add(object);
 
 		List<GameObject> result = map.findObjects(createEnvelope(new Coordinate(10, 0), 8));

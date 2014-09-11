@@ -16,10 +16,8 @@ import java.util.List;
  */
 public class Wall extends GameObject
 {
-	public Wall(Long id, Coordinate position)
+	public Wall(Coordinate position)
 	{
-		super(id);
-
 		setMaterial(new RectangleMaterial(this, Color.gray, 50, 50));
 		setCoordinate(position);
 	}

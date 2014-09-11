@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Represents all game objects.
@@ -25,7 +26,7 @@ public abstract class GameObject
 {
 	static final Logger LOG = Logger.getLogger(GameObject.class);
 
-	private Long id;
+	private UUID id;
 
 	private Coordinate coordinate;
 
@@ -33,12 +34,12 @@ public abstract class GameObject
 
 	private Material material;
 
-	public GameObject(Long id)
+	public GameObject()
 	{
-		this.id = id;
+		this.id = UUID.randomUUID();
 	}
 
-	public Long getId()
+	public UUID getId()
 	{
 		return id;
 	}

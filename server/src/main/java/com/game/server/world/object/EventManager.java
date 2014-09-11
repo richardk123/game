@@ -12,11 +12,6 @@ import java.util.List;
  */
 public class EventManager extends GameObject
 {
-	public EventManager(Long id)
-	{
-		super(id);
-	}
-
 	@Override
 	protected List<Behavior> getBehaviours()
 	{

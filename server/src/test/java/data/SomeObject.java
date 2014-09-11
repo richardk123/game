@@ -13,10 +13,8 @@ import java.util.List;
  */
 public class SomeObject extends GameObject
 {
-	public SomeObject(Long id, Coordinate position, int width, int height)
+	public SomeObject(Coordinate position, int width, int height)
 	{
-		super(id);
-
 		setCoordinate(position);
 		setMaterial(new RectangleMaterial(this, width, height));
 	}

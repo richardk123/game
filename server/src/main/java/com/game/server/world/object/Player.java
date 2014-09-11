@@ -15,10 +15,8 @@ import java.util.List;
  */
 public class Player extends GameObject
 {
-	public Player(Long id, Coordinate position)
+	public Player(Coordinate position)
 	{
-		super(id);
-
 		setMaterial(new RectangleMaterial(this, Color.yellow, 10, 10));
 		setCoordinate(position);
 	}
