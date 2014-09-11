@@ -1,23 +1,25 @@
 package com.game.server.world.object;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.game.server.world.behavior.ViewBehaviour;
+import com.game.server.world.behavior.ReplicationTestBehavior;
 import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.internal.ViewBehaviour;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author dohnal
  */
 public class Wall extends GameObject
 {
-	public Wall(Coordinate position)
+	public Wall(Long id, Coordinate position)
 	{
+		super(id);
+
 		setMaterial(new RectangleMaterial(this, Color.gray, 50, 50));
 		setCoordinate(position);
 	}
@@ -27,7 +29,8 @@ public class Wall extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<>();
 
-		behaviors.add(new ViewBehaviour(this, new Envelope(-10, 10, -10, 10)));
+		behaviors.add(new ViewBehaviour(this, 70, 70));
+		behaviors.add(new ReplicationTestBehavior(this));
 
 		return behaviors;
 	}

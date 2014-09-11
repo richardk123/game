@@ -30,15 +30,11 @@ public abstract class Behavior
 		behaviour.apply(message);
 	}
 
-	protected void onCreated()
-	{
+	public void onCreate()
+	{ }
 
-	}
-
-	protected void onDestroyed()
-	{
-
-	}
+	public void onDestroy()
+	{ }
 
 	protected GameObject getSender()
 	{
@@ -52,7 +48,7 @@ public abstract class Behavior
 
 	protected WorldMap<GameObject> getWorld()
 	{
-		return GameService.get().getWorldCollisionMap();
+		return GameService.get().getWorldMap();
 	}
 
 	protected void behaviour(PartialFunction<Object, BoxedUnit> behaviour)

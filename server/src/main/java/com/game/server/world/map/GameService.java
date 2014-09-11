@@ -1,8 +1,6 @@
 package com.game.server.world.map;
 
-import com.game.server.world.behavior.ViewBehaviour;
 import com.game.server.world.object.base.GameObject;
-import com.vividsolutions.jts.geom.Envelope;
 
 /**
  * @author Richard Kolísek
@@ -10,8 +8,8 @@ import com.vividsolutions.jts.geom.Envelope;
 public class GameService
 {
 	private static GameService gameService;
-	private WorldMap<GameObject> worldCollisionMap;
-	private WorldMap<ViewBehaviour> worldViewMap;
+
+	private WorldMap<GameObject> worldMap;
 
 	public synchronized static GameService get()
 	{
@@ -29,40 +27,13 @@ public class GameService
 		return gameService;
 	}
 
-	public WorldMap<GameObject> getWorldCollisionMap()
+	private GameService()
 	{
-		if (worldCollisionMap == null)
-		{
-			worldCollisionMap = new GameObjectMap<GameObject>(
-					new WorldMap.MapAdapter<GameObject>()
-					{
-						@Override
-						public Envelope getEnvelope(GameObject value)
-						{
-							return value.getBoundingBoxMoving();
-						}
-					}
-			);
-		}
-		return worldCollisionMap;
+		worldMap = new SynchronizedWorldMap();
 	}
 
-	public WorldMap<ViewBehaviour> getWorldViewMap()
+	public WorldMap<GameObject> getWorldMap()
 	{
-		if (worldViewMap == null)
-		{
-			worldViewMap = new GameObjectMap<ViewBehaviour>(
-					new WorldMap.MapAdapter<ViewBehaviour>()
-					{
-						@Override
-						public Envelope getEnvelope(ViewBehaviour value)
-						{
-							return value.getViewBoxMoving();
-						}
-					}
-			);
-		}
-		return worldViewMap;
+		return worldMap;
 	}
-
 }

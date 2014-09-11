@@ -1,15 +1,13 @@
 package com.game.server.world.map;
 
-import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Envelope;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @author dohnal
  */
-public interface WorldMap<T> extends Iterable<T>
+public interface WorldMap<T>
 {
 	/**
 	 * Adds a new object to the map.
@@ -33,22 +31,17 @@ public interface WorldMap<T> extends Iterable<T>
 	public void clear();
 
 	/**
-	 * Find all objects which lies or overlaps given AABB
+	 * Finds all objects which lies or overlaps given envelope
 	 */
-	public List<T> find(Envelope envelope);
+	public List<T> findObjects(Envelope envelope);
 
-	public int getSize();
+	/**
+	 * Finds all objects which can view given object
+	 */
+	public List<T> findViewedObjects(T object);
 
-	public MapAdapter<T> getAdapter();
-
-	public static interface MapAdapter<T>
-	{
-		/**
-		 * get bounding box
-		 */
-		Envelope getEnvelope(T value);
-
-	}
-
-
+	/**
+	 * Get all objects in world
+	 */
+	public List<T> getObjects();
 }

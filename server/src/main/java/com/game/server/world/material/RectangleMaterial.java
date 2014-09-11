@@ -1,10 +1,10 @@
 package com.game.server.world.material;
 
-import java.awt.*;
-
 import com.game.server.world.material.base.Material;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Envelope;
+
+import java.awt.Color;
 
 /**
  * @author dohnal
@@ -32,7 +32,7 @@ public class RectangleMaterial implements Material
 	}
 
 	@Override
-	public com.vividsolutions.jts.geom.Envelope getBoundingBox()
+	public Envelope getBoundingBox()
 	{
 		return new Envelope(
 				self.getX() - width * 0.5, self.getX() + width * 0.5,

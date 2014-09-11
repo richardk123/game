@@ -1,6 +1,6 @@
 package com.game.server;
 
-import com.game.server.world.behavior.KeyInputBehavior;
+import com.game.server.world.behavior.internal.KeyInputBehavior;
 import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.material.RectangleMaterial;
@@ -45,7 +45,7 @@ public class OpenGL
 
 	private static Random generator = new Random();
 
-	private static WorldMap<GameObject> map;
+	private static WorldMap<GameObject> world;
 
 	protected static void setup(GL2 gl2, int width, int height)
 	{
@@ -66,20 +66,28 @@ public class OpenGL
 	{
 		gl2.glClear( GL.GL_COLOR_BUFFER_BIT );
 
-		// draw a triangle filling the window
 		gl2.glLoadIdentity();
 
 		// render objects
-		for (GameObject object : map)
-		{
-			drawRect(gl2, object.getMaterial());
-		}
+		world.getObjects().forEach(object -> {
+			if (object.getMaterial() != null)
+			{
+				fillRect(gl2, object.getMaterial());
+			}
+		});
+
+		// render views
+		world.getObjects().forEach(object -> {
+			if (object.getViewBox() != null)
+			{
+				drawRect(gl2, object.getViewBox(), Color.green);
+			}
+		});
 	}
 
-	protected static void drawRect(GL2 gl2, Material material)
+	protected static void fillRect(GL2 gl2, Material material)
 	{
-		gl2.glBegin( GL.GL_POLYGON_OFFSET_FACTOR );
-
+		gl2.glBegin(GL.GL_POLYGON_OFFSET_FACTOR);
 
 		if (material instanceof RectangleMaterial)
 		{
@@ -87,16 +95,30 @@ public class OpenGL
 			gl2.glColor3d(color.getRed() / 256.0, color.getGreen() / 256.0, color.getBlue() / 256.0);
 		}
 
-		Envelope aabb = material.getBoundingBox();
+		Envelope envelope = material.getBoundingBox();
 
-		gl2.glRectd(aabb.getMinX(), aabb.getMaxY(), aabb.getMaxX(), aabb.getMinY());
+		gl2.glRectd(envelope.getMinX(), envelope.getMaxY(), envelope.getMaxX(), envelope.getMinY());
+
+		gl2.glEnd();
+	}
+
+	protected static void drawRect(GL2 gl2, Envelope envelope, Color color)
+	{
+		gl2.glBegin(GL.GL_LINE_LOOP);
+
+		gl2.glColor3d(color.getRed() / 256.0, color.getGreen() / 256.0, color.getBlue() / 256.0);
+
+		gl2.glVertex2d(envelope.getMinX(), envelope.getMinY());
+		gl2.glVertex2d(envelope.getMaxX(), envelope.getMinY());
+		gl2.glVertex2d(envelope.getMaxX(), envelope.getMaxY());
+		gl2.glVertex2d(envelope.getMinX(), envelope.getMaxY());
 
 		gl2.glEnd();
 	}
 
 	public static void main(String [] args)
 	{
-		map = createMap();
+		world = createWorld();
 
 		GLProfile glprofile = GLProfile.getDefault();
 		GLCapabilities glcapabilities = new GLCapabilities(glprofile);
@@ -129,7 +151,7 @@ public class OpenGL
 		});
 
 		// add event manager game object
-		EventManager eventManager = new EventManager();
+		EventManager eventManager = new EventManager(1L);
 
 		glcanvas.addKeyListener(eventManager.getBehavior(KeyInputBehavior.class));
 
@@ -143,13 +165,15 @@ public class OpenGL
 			}
 		});
 
+		glcanvas.setPreferredSize(new Dimension(640, 480));
+
 		JPanel infoPanel = new JPanel();
 		infoPanel.setBorder(BorderFactory.createTitledBorder("Info"));
-		infoPanel.setPreferredSize(new Dimension(250, 400));
+		infoPanel.setPreferredSize(new Dimension(160, 480));
 
 		JPanel scenePanel = new JPanel(new BorderLayout());
 		scenePanel.setBorder(BorderFactory.createTitledBorder("Scene"));
-		scenePanel.setPreferredSize(new Dimension(400, 100));
+		scenePanel.setPreferredSize(new Dimension(800, 120));
 
 		jframe.getContentPane().add(scenePanel, BorderLayout.NORTH);
 		jframe.getContentPane().add(glcanvas, BorderLayout.CENTER);
@@ -163,11 +187,11 @@ public class OpenGL
 		animator.start();
 	}
 
-	private static WorldMap<GameObject> createMap()
+	private static WorldMap<GameObject> createWorld()
 	{
-		final WorldMap<GameObject> map = GameService.get().getWorldCollisionMap();
+		WorldMap<GameObject> world = GameService.get().getWorldMap();
 
-		map.add(new Player(new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
+		world.add(new Player(1L, new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
 
 		// add walls to map
 		for (int i = 0; i < 5; i++)
@@ -175,8 +199,9 @@ public class OpenGL
 			int x = generator.nextInt(OpenGL.WIDTH - 200) + 100;
 			int y = generator.nextInt(OpenGL.HEIGHT - 200) + 100;
 
-			map.add(new Wall(new Coordinate(x, y)));
+			world.add(new Wall((long)(i + 1), new Coordinate(x, y)));
 		}
-		return map;
+
+		return world;
 	}
 }

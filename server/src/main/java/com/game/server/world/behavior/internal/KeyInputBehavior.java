@@ -1,7 +1,6 @@
-package com.game.server.world.behavior;
+package com.game.server.world.behavior.internal;
 
 import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.behavior.base.Message;
 import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
@@ -13,9 +12,9 @@ import java.util.Set;
 /**
  * @author dohnal
  */
-public class KeyInputBehavior extends Behavior implements KeyListener
+public final class KeyInputBehavior extends Behavior implements KeyListener
 {
-	private static final Logger LOG = Logger.getLogger(GameObject.class);
+	private static final Logger LOG = Logger.getLogger(KeyInputBehavior.class);
 
 	private final Set<Integer> pressedKeys = new HashSet<>();
 
@@ -35,7 +34,7 @@ public class KeyInputBehavior extends Behavior implements KeyListener
 		{
 			pressedKeys.add(e.getKeyCode());
 
-			for (GameObject object : getWorld())
+			for (GameObject object : getWorld().getObjects())
 			{
 				object.tell(new KeyPressedMessage(e.getKeyCode()), getSelf());
 			}
@@ -45,7 +44,7 @@ public class KeyInputBehavior extends Behavior implements KeyListener
 	@Override
 	public void keyReleased(KeyEvent e)
 	{
-		for (GameObject object : getWorld())
+		for (GameObject object : getWorld().getObjects())
 		{
 			object.tell(new KeyReleasedMessage(e.getKeyCode()), getSelf());
 		}
@@ -53,7 +52,7 @@ public class KeyInputBehavior extends Behavior implements KeyListener
 		pressedKeys.remove(e.getKeyCode());
 	}
 
-	protected class KeyMessage extends Message
+	public static class KeyMessage extends InternalMessage
 	{
 		protected final int keyCode;
 
@@ -68,7 +67,7 @@ public class KeyInputBehavior extends Behavior implements KeyListener
 		}
 	}
 
-	protected class KeyPressedMessage extends KeyMessage
+	public static class KeyPressedMessage extends KeyMessage
 	{
 		public KeyPressedMessage(int keyCode)
 		{
@@ -76,7 +75,7 @@ public class KeyInputBehavior extends Behavior implements KeyListener
 		}
 	}
 
-	protected class KeyReleasedMessage extends KeyMessage
+	public static class KeyReleasedMessage extends KeyMessage
 	{
 		public KeyReleasedMessage(int keyCode)
 		{

@@ -1,36 +1,24 @@
 package data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author dohnal
  */
 public class SomeObject extends GameObject
 {
-	private double width;
-	private double height;
-
-
-	public SomeObject(Coordinate position, double width, double height)
+	public SomeObject(Long id, Coordinate position, int width, int height)
 	{
-
-		this.width = width;
-		this.height = height;
+		super(id);
 
 		setCoordinate(position);
-	}
-
-	@Override
-	public Envelope getBoundingBox()
-	{
-		return new Envelope(getX() - width * 0.5, getX() + width * 0.5,
-				getY() - height * 0.5, getY() + height * 0.5);
+		setMaterial(new RectangleMaterial(this, width, height));
 	}
 
 	@Override
@@ -39,15 +27,5 @@ public class SomeObject extends GameObject
 		List<Behavior> behaviors = new ArrayList<>();
 
 		return behaviors;
-	}
-
-	public double getWidth()
-	{
-		return width;
-	}
-
-	public double getHeight()
-	{
-		return height;
 	}
 }

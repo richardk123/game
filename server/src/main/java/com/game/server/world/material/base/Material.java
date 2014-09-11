@@ -15,5 +15,4 @@ public interface Material
 	 * Get bounding box
 	 */
 	public Envelope getBoundingBox();
-
 }

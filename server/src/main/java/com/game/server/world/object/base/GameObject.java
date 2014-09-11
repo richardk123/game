@@ -4,17 +4,19 @@ package com.game.server.world.object.base;
  * @author dohnal
  */
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.List;
-import java.util.UUID;
-
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.Message;
+import com.game.server.world.behavior.internal.InternalMessage;
+import com.game.server.world.behavior.internal.ViewBehaviour;
+import com.game.server.world.map.GameService;
 import com.game.server.world.material.base.Material;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import org.apache.log4j.Logger;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Represents all game objects.
@@ -23,7 +25,7 @@ public abstract class GameObject
 {
 	static final Logger LOG = Logger.getLogger(GameObject.class);
 
-	private UUID id;
+	private Long id;
 
 	private Coordinate coordinate;
 
@@ -31,14 +33,12 @@ public abstract class GameObject
 
 	private Material material;
 
-	private Envelope boundingBoxMoving;
-
-	public GameObject()
+	public GameObject(Long id)
 	{
-		this.id = UUID.randomUUID();
+		this.id = id;
 	}
 
-	public UUID getId()
+	public Long getId()
 	{
 		return id;
 	}
@@ -53,18 +53,23 @@ public abstract class GameObject
 		return coordinate.getOrdinate(Coordinate.Y);
 	}
 
-	/**
-	 *  get box used for collisions
-	 */
 	@Nullable
-	public Envelope getBoundingBox()
+	public Envelope getCollisionBox()
 	{
 		return material != null ? material.getBoundingBox() : null;
 	}
 
-	public Envelope getBoundingBoxMoving()
+	@Nullable
+	public Envelope getViewBox()
 	{
-		return boundingBoxMoving;
+		ViewBehaviour viewBehaviour = getBehavior(ViewBehaviour.class);
+
+		if (viewBehaviour != null)
+		{
+			return viewBehaviour.getViewBox();
+		}
+
+		return null;
 	}
 
 	@Nullable
@@ -100,17 +105,44 @@ public abstract class GameObject
 
 	public void tell(@Nonnull Message message, @Nullable GameObject sender)
 	{
+		// handle incoming message
 		getBehaviorsLazy().stream().filter(behavior -> behavior.isDefinedAt(message)).forEach(behavior -> {
 			behavior.setCurrentSender(sender);
-
 			behavior.apply(message);
 		});
+
+		// replicate incoming message to viewers (skip replicating internal messages)
+		if (!InternalMessage.class.isAssignableFrom(message.getClass()))
+		{
+			GameService.get().getWorldMap().findViewedObjects(this).forEach(object -> {
+				if (!object.getId().equals(getId()))
+				{
+					object.tell(new ViewBehaviour.ViewMessage(message), this);
+				}
+			});
+		}
+	}
+
+	public void onCreate()
+	{
+		for (Behavior behavior : getBehaviorsLazy())
+		{
+			behavior.onCreate();
+		}
+	}
+
+	public void onDestroy()
+	{
+		for (Behavior behavior : getBehaviorsLazy())
+		{
+			behavior.onDestroy();
+		}
 	}
 
 	@Override
 	public String toString()
 	{
-		return this.getClass().getSimpleName() + ":" + getId().toString();
+		return this.getClass().getSimpleName() + "[" + getId().toString() + "]";
 	}
 
 	public Material getMaterial()
@@ -127,13 +159,6 @@ public abstract class GameObject
 	public void move(double x, double y)
 	{
 		coordinate = new Coordinate(getX() + x, getY() + y);
-		recalculateBoundingBoxMoving();
-	}
-
-	private void recalculateBoundingBoxMoving()
-	{
-		boundingBoxMoving = new Envelope(getBoundingBox().getMinX() + getX(), getBoundingBox().getMaxX() + getX(),
-				getBoundingBox().getMinY() + getY(), getBoundingBox().getMaxY() + getY());
 	}
 
 	public Coordinate getCoordinate()
@@ -144,6 +169,5 @@ public abstract class GameObject
 	public void setCoordinate(Coordinate coordinate)
 	{
 		this.coordinate = coordinate;
-		recalculateBoundingBoxMoving();
 	}
 }

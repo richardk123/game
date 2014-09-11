@@ -1,12 +1,10 @@
 package com.game.server.world.object;
 
 import com.game.server.world.behavior.PlayerMoveBehavior;
-import com.game.server.world.behavior.ViewBehaviour;
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,8 +15,10 @@ import java.util.List;
  */
 public class Player extends GameObject
 {
-	public Player(Coordinate position)
+	public Player(Long id, Coordinate position)
 	{
+		super(id);
+
 		setMaterial(new RectangleMaterial(this, Color.yellow, 10, 10));
 		setCoordinate(position);
 	}
@@ -29,7 +29,6 @@ public class Player extends GameObject
 		List<Behavior> behaviors = new ArrayList<>();
 
 		behaviors.add(new PlayerMoveBehavior(this, 1));
-		behaviors.add(new ViewBehaviour(this, new Envelope(-10, 10, -10, 10)));
 
 		return behaviors;
 	}

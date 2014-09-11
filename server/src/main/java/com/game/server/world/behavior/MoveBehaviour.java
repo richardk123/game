@@ -19,14 +19,7 @@ public abstract class MoveBehaviour extends Behavior
 	{
 		getSelf().move(moveMessage.getX(), moveMessage.getY());
 
-		GameService.get().getWorldCollisionMap().update(getSelf());
-
-		getSelf().tell(new PositionChangedMessage(), getSelf());
-	}
-
-	public static class PositionChangedMessage extends Message
-	{
-
+		GameService.get().getWorldMap().update(getSelf());
 	}
 
 	public static class MoveMessage extends Message
@@ -52,17 +45,11 @@ public abstract class MoveBehaviour extends Behavior
 	}
 
 	public static class CollisionEnterMessage extends Message
-	{
-
-	}
+	{ }
 
 	public static class CollisionMessage
-	{
-
-	}
+	{ }
 
 	public static class CollisionLeaveMessage
-	{
-
-	}
+	{ }
 }
