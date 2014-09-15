@@ -60,4 +60,34 @@ public abstract class Behavior
 	{
 		this.currentSender = currentSender;
 	}
+
+	public static final class AddBehavior extends Message
+	{
+		private Behavior behavior;
+
+		public AddBehavior(Behavior behavior)
+		{
+			this.behavior = behavior;
+		}
+
+		public Behavior getBehavior()
+		{
+			return behavior;
+		}
+	}
+
+	public static final class RemoveBehavior extends Message
+	{
+		private Behavior behavior;
+
+		public RemoveBehavior(Behavior behavior)
+		{
+			this.behavior = behavior;
+		}
+
+		public Behavior getBehavior()
+		{
+			return behavior;
+		}
+	}
 }

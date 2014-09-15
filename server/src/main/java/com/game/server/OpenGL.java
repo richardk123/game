@@ -8,6 +8,7 @@ import com.game.server.world.material.base.Material;
 import com.game.server.world.object.EventManager;
 import com.game.server.world.object.Player;
 import com.game.server.world.object.Wall;
+import com.game.server.world.object.Water;
 import com.game.server.world.object.base.GameObject;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -83,12 +84,18 @@ public class OpenGL
 				drawRect(gl2, object.getViewBox(), Color.green);
 			}
 		});
+
+		// render collision boxes
+		world.getObjects().forEach(object -> {
+			if (object.getCollisionBox() != null)
+			{
+				drawRect(gl2, object.getCollisionBox(), Color.red);
+			}
+		});
 	}
 
 	protected static void fillRect(GL2 gl2, Material material)
 	{
-		gl2.glBegin(GL.GL_POLYGON_OFFSET_FACTOR);
-
 		if (material instanceof RectangleMaterial)
 		{
 			Color color = ((RectangleMaterial) material).getColor();
@@ -98,8 +105,6 @@ public class OpenGL
 		Envelope envelope = material.getBoundingBox();
 
 		gl2.glRectd(envelope.getMinX(), envelope.getMaxY(), envelope.getMaxX(), envelope.getMinY());
-
-		gl2.glEnd();
 	}
 
 	protected static void drawRect(GL2 gl2, Envelope envelope, Color color)
@@ -192,15 +197,11 @@ public class OpenGL
 		WorldMap<GameObject> world = GameService.get().getWorldMap();
 
 		world.add(new Player(new Coordinate(OpenGL.WIDTH / 2 - 10, OpenGL.HEIGHT / 2 - 10)));
+		world.add(new Water(new Coordinate(150, 250)));
 
-		// add walls to map
-		for (int i = 0; i < 5; i++)
-		{
-			int x = generator.nextInt(OpenGL.WIDTH - 200) + 100;
-			int y = generator.nextInt(OpenGL.HEIGHT - 200) + 100;
-
-			world.add(new Wall(new Coordinate(x, y)));
-		}
+		world.add(new Wall(new Coordinate(300, 300)));
+		world.add(new Wall(new Coordinate(450, 100)));
+		world.add(new Wall(new Coordinate(500, 400)));
 
 		return world;
 	}

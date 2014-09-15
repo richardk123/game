@@ -1,8 +1,6 @@
 package com.game.server.world.object;
 
-import com.game.server.world.behavior.ReplicationTestBehavior;
 import com.game.server.world.behavior.base.Behavior;
-import com.game.server.world.behavior.internal.ViewBehaviour;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Coordinate;
@@ -27,8 +25,8 @@ public class Wall extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<>();
 
-		behaviors.add(new ViewBehaviour(this, 70, 70));
-		behaviors.add(new ReplicationTestBehavior(this));
+		//behaviors.add(new ViewBehaviour(this, 70, 70));
+		//behaviors.add(new ReplicationTestBehavior(this));
 
 		return behaviors;
 	}

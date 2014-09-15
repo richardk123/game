@@ -155,7 +155,7 @@ public class SynchronizedWorldMap implements WorldMap<GameObject>
 	}
 
 	@Override
-	public List<GameObject> getObjects()
+	public synchronized List<GameObject> getObjects()
 	{
 		return ImmutableList.copyOf(objects);
 	}

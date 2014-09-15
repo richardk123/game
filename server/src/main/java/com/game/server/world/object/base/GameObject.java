@@ -5,19 +5,25 @@ package com.game.server.world.object.base;
  */
 
 import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.base.BehaviorBuilder;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.behavior.internal.InternalMessage;
 import com.game.server.world.behavior.internal.ViewBehaviour;
 import com.game.server.world.map.GameService;
 import com.game.server.world.material.base.Material;
+import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import org.apache.log4j.Logger;
+import scala.PartialFunction;
+import scala.runtime.BoxedUnit;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Represents all game objects.
@@ -30,13 +36,27 @@ public abstract class GameObject
 
 	private Coordinate coordinate;
 
+	private PartialFunction<Object, BoxedUnit> defaultMessageHandler;
+
 	private List<Behavior> behaviors;
+
+	private List<Behavior> added;
+
+	private List<Behavior> removed;
 
 	private Material material;
 
 	public GameObject()
 	{
 		this.id = UUID.randomUUID();
+
+		this.added = Lists.newArrayList();
+		this.removed = Lists.newArrayList();
+
+		defaultMessageHandler = BehaviorBuilder
+				.match(Behavior.AddBehavior.class, m -> addBehavior(m.getBehavior()))
+				.match(Behavior.RemoveBehavior.class, m -> removeBehavior(m.getBehavior()))
+				.build();
 	}
 
 	public UUID getId()
@@ -76,11 +96,23 @@ public abstract class GameObject
 	@Nullable
 	protected abstract List<Behavior> getBehaviours();
 
+	/**
+	 * List of behaviors must be synchronized
+	 */
 	private List<Behavior> getBehaviorsLazy()
 	{
 		if (behaviors == null)
 		{
-			behaviors = getBehaviours();
+			List<Behavior> definedBehaviors = getBehaviours();
+
+			if (definedBehaviors == null)
+			{
+				behaviors = new CopyOnWriteArrayList<>(new ArrayList<>());
+			}
+			else
+			{
+				behaviors = new CopyOnWriteArrayList<>(definedBehaviors);
+			}
 		}
 
 		return behaviors;
@@ -94,7 +126,7 @@ public abstract class GameObject
 		{
 			for (Behavior b : getBehaviorsLazy())
 			{
-				if (b.getClass().equals(behavior))
+				if (behavior.isAssignableFrom(b.getClass()))
 				{
 					return (T)b;
 				}
@@ -106,6 +138,8 @@ public abstract class GameObject
 
 	public void tell(@Nonnull Message message, @Nullable GameObject sender)
 	{
+		defaultMessageHandler(message);
+
 		// handle incoming message
 		getBehaviorsLazy().stream().filter(behavior -> behavior.isDefinedAt(message)).forEach(behavior -> {
 			behavior.setCurrentSender(sender);
@@ -122,6 +156,34 @@ public abstract class GameObject
 				}
 			});
 		}
+
+
+		getBehaviorsLazy().removeAll(removed);
+		getBehaviorsLazy().addAll(added);
+
+		removed = Lists.newArrayList();
+		added = Lists.newArrayList();
+	}
+
+	private void defaultMessageHandler(@Nonnull Message message)
+	{
+		if (defaultMessageHandler.isDefinedAt(message))
+		{
+			defaultMessageHandler.apply(message);
+		}
+	}
+
+	private void addBehavior(Behavior behavior)
+	{
+
+		added.add(behavior);
+		behavior.onCreate();
+	}
+
+	private void removeBehavior(Behavior behavior)
+	{
+		removed.add(behavior);
+		behavior.onDestroy();
 	}
 
 	public void onCreate()

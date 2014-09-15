@@ -16,8 +16,6 @@ public class PlayerMoveBehavior extends MoveBehaviour
 {
 	private static final Logger LOG = Logger.getLogger(PlayerMoveBehavior.class);
 
-	private double speed = 1;
-
 	private int KEY_UP = KeyEvent.VK_W;
 	private int KEY_DOWN = KeyEvent.VK_S;
 	private int KEY_LEFT = KeyEvent.VK_A;
@@ -34,9 +32,7 @@ public class PlayerMoveBehavior extends MoveBehaviour
 
 	public PlayerMoveBehavior(GameObject self, double speed)
 	{
-		super(self);
-
-		this.speed = speed;
+		super(self, speed);
 
 		behaviour(BehaviorBuilder.match(KeyInputBehavior.KeyPressedMessage.class, this::handleKeyPressed)
 								 .match(KeyInputBehavior.KeyReleasedMessage.class, this::handleKeyReleased)
@@ -118,8 +114,8 @@ public class PlayerMoveBehavior extends MoveBehaviour
 				public void run()
 				{
 					getSelf().tell(new MoveMessage(
-							rightPressed ? speed : (leftPressed ? -speed : 0),
-							upPressed ? speed : (downPressed ? -speed : 0)), getSelf());
+							rightPressed ? getMovementSpeed().getValue() : (leftPressed ? -getMovementSpeed().getValue() : 0),
+							upPressed ? getMovementSpeed().getValue() : (downPressed ? -getMovementSpeed().getValue() : 0)), getSelf());
 				}
 			}, 0, 10);
 		}
