@@ -1,7 +1,7 @@
-import com.game.server.world.map.GameService;
 import com.game.server.world.map.SynchronizedWorldMap;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.object.base.GameObject;
+import com.game.server.world.service.GameService;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import data.SomeObject;

@@ -1,7 +1,6 @@
 package com.game.server;
 
 import com.game.server.world.behavior.internal.KeyInputBehavior;
-import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.material.RectangleMaterial;
 import com.game.server.world.material.base.Material;
@@ -10,6 +9,7 @@ import com.game.server.world.object.Player;
 import com.game.server.world.object.Wall;
 import com.game.server.world.object.Water;
 import com.game.server.world.object.base.GameObject;
+import com.game.server.world.service.GameService;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;

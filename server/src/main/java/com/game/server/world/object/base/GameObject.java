@@ -9,8 +9,8 @@ import com.game.server.world.behavior.base.BehaviorBuilder;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.behavior.internal.InternalMessage;
 import com.game.server.world.behavior.internal.ViewBehaviour;
-import com.game.server.world.map.GameService;
 import com.game.server.world.material.base.Material;
+import com.game.server.world.service.GameService;
 import com.google.common.collect.Lists;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -32,7 +31,7 @@ public abstract class GameObject
 {
 	static final Logger LOG = Logger.getLogger(GameObject.class);
 
-	private UUID id;
+	private Long id;
 
 	private Coordinate coordinate;
 
@@ -48,18 +47,18 @@ public abstract class GameObject
 
 	public GameObject()
 	{
-		this.id = UUID.randomUUID();
+		this.id = GameService.get().getIdGenerator().generateId(getClass());
 
 		this.added = Lists.newArrayList();
 		this.removed = Lists.newArrayList();
 
 		defaultMessageHandler = BehaviorBuilder
-				.match(Behavior.AddBehavior.class, m -> addBehavior(m.getBehavior()))
-				.match(Behavior.RemoveBehavior.class, m -> removeBehavior(m.getBehavior()))
+				.match(Behavior.AddBehaviorMessage.class, m -> addBehavior(m.getBehavior()))
+				.match(Behavior.RemoveBehaviorMessage.class, m -> removeBehavior(m.getBehavior()))
 				.build();
 	}
 
-	public UUID getId()
+	public Long getId()
 	{
 		return id;
 	}
@@ -141,6 +140,11 @@ public abstract class GameObject
 		return null;
 	}
 
+	public boolean hasBehavior(Class behavior)
+	{
+		return getBehavior(behavior) != null;
+	}
+
 	public void tell(@Nonnull Message message, @Nullable GameObject sender)
 	{
 		defaultMessageHandler(message);
@@ -161,13 +165,6 @@ public abstract class GameObject
 				}
 			});
 		}
-
-
-		getBehaviorsLazy().removeAll(removed);
-		getBehaviorsLazy().addAll(added);
-
-		removed = Lists.newArrayList();
-		added = Lists.newArrayList();
 	}
 
 	private void defaultMessageHandler(@Nonnull Message message)
@@ -180,15 +177,18 @@ public abstract class GameObject
 
 	private void addBehavior(Behavior behavior)
 	{
-
-		added.add(behavior);
+		getBehaviorsLazy().add(behavior);
 		behavior.onCreate();
 	}
 
-	private void removeBehavior(Behavior behavior)
+	private void removeBehavior(Class<? extends Behavior> behavior)
 	{
-		removed.add(behavior);
-		behavior.onDestroy();
+		getBehaviorsLazy().stream()
+				.filter(b -> b.getClass().equals(behavior))
+				.forEach(b -> {
+					b.onDestroy();
+					getBehaviorsLazy().remove(b);
+				});
 	}
 
 	public void onCreate()
