@@ -3,8 +3,8 @@ package com.game.server.world.behavior;
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.BehaviorProperty;
 import com.game.server.world.behavior.base.Message;
-import com.game.server.world.map.GameService;
 import com.game.server.world.object.base.GameObject;
+import com.game.server.world.service.GameService;
 import com.google.common.collect.Lists;
 import org.apache.log4j.Logger;
 

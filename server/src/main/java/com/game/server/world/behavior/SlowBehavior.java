@@ -2,12 +2,8 @@ package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.BehaviorBuilder;
-import com.game.server.world.behavior.base.Debuff;
 import com.game.server.world.behavior.debuff.MovementDecreaseDebuff;
 import com.game.server.world.object.base.GameObject;
-import com.google.common.collect.Maps;
-
-import java.util.Map;
 
 /**
  * @author dohnal
@@ -18,8 +14,6 @@ public class SlowBehavior extends Behavior
 	 * Decrease speed in percentage
 	 */
 	private double decreaseSpeed;
-
-	private Map<GameObject, Debuff> debuffs = Maps.newHashMap();
 
 	public SlowBehavior(GameObject self, double decreaseSpeed)
 	{
@@ -35,22 +29,17 @@ public class SlowBehavior extends Behavior
 
 	private void onCollisionEnter(GameObject object)
 	{
-		Debuff debuff = new MovementDecreaseDebuff(object, decreaseSpeed);
-
-		debuffs.put(object, debuff);
-
-		object.tell(new AddBehavior(debuff), getSelf());
+		if (object.hasBehavior(MoveBehaviour.class))
+		{
+			object.tell(new AddBehaviorMessage(new MovementDecreaseDebuff(object, decreaseSpeed)), getSelf());
+		}
 	}
 
 	private void onCollisionLeave(GameObject object)
 	{
-		Debuff debuff = debuffs.get(object);
-
-		if (debuff != null)
+		if (object.hasBehavior(MoveBehaviour.class))
 		{
-			debuffs.remove(object, debuff);
-
-			object.tell(new RemoveBehavior(debuff), getSelf());
+			object.tell(new RemoveBehaviorMessage(MovementDecreaseDebuff.class), getSelf());
 		}
 	}
 }

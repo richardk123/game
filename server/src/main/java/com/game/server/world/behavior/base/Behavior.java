@@ -1,8 +1,8 @@
 package com.game.server.world.behavior.base;
 
-import com.game.server.world.map.GameService;
 import com.game.server.world.map.WorldMap;
 import com.game.server.world.object.base.GameObject;
+import com.game.server.world.service.GameService;
 import scala.PartialFunction;
 import scala.runtime.BoxedUnit;
 
@@ -61,11 +61,11 @@ public abstract class Behavior
 		this.currentSender = currentSender;
 	}
 
-	public static final class AddBehavior extends Message
+	public static final class AddBehaviorMessage extends Message
 	{
 		private Behavior behavior;
 
-		public AddBehavior(Behavior behavior)
+		public AddBehaviorMessage(Behavior behavior)
 		{
 			this.behavior = behavior;
 		}
@@ -76,18 +76,18 @@ public abstract class Behavior
 		}
 	}
 
-	public static final class RemoveBehavior extends Message
+	public static final class RemoveBehaviorMessage extends Message
 	{
-		private Behavior behavior;
+		private Class<? extends Behavior> behaviorType;
 
-		public RemoveBehavior(Behavior behavior)
+		public RemoveBehaviorMessage(Class<? extends Behavior> behaviorType)
 		{
-			this.behavior = behavior;
+			this.behaviorType = behaviorType;
 		}
 
-		public Behavior getBehavior()
+		public Class<? extends Behavior> getBehavior()
 		{
-			return behavior;
+			return behaviorType;
 		}
 	}
 }
