@@ -16,7 +16,7 @@ public class SomeObject extends GameObject
 	public SomeObject(Coordinate position, int width, int height)
 	{
 		setCoordinate(position);
-		setMaterial(new RectangleMaterial(this, width, height));
+		setMaterial(new RectangleMaterial(width, height, true));
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class Player extends GameObject
 {
 	public Player(Coordinate position)
 	{
-		setMaterial(new RectangleMaterial(this, Color.yellow, 10, 10));
+		setMaterial(new RectangleMaterial(Color.yellow, 10, 10, false));
 		setCoordinate(position);
 	}
 

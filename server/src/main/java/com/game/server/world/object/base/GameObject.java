@@ -77,7 +77,12 @@ public abstract class GameObject
 	@Nullable
 	public Envelope getCollisionBox()
 	{
-		return material != null ? material.getBoundingBox() : null;
+		return material != null ? material.getBoundingBox(getX(), getY()) : null;
+	}
+
+	public Envelope getCollisionBox(double newX, double newY)
+	{
+		return material != null ? material.getBoundingBox(newX, newY) : null;
 	}
 
 	@Nullable

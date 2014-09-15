@@ -73,7 +73,7 @@ public class OpenGL
 		world.getObjects().forEach(object -> {
 			if (object.getMaterial() != null)
 			{
-				fillRect(gl2, object.getMaterial());
+				fillRect(gl2, object);
 			}
 		});
 
@@ -94,15 +94,17 @@ public class OpenGL
 		});
 	}
 
-	protected static void fillRect(GL2 gl2, Material material)
+	protected static void fillRect(GL2 gl2, GameObject object)
 	{
+		Material material = object.getMaterial();
+
 		if (material instanceof RectangleMaterial)
 		{
 			Color color = ((RectangleMaterial) material).getColor();
 			gl2.glColor3d(color.getRed() / 256.0, color.getGreen() / 256.0, color.getBlue() / 256.0);
 		}
 
-		Envelope envelope = material.getBoundingBox();
+		Envelope envelope = object.getCollisionBox();
 
 		gl2.glRectd(envelope.getMinX(), envelope.getMaxY(), envelope.getMaxX(), envelope.getMinY());
 	}

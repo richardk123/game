@@ -6,6 +6,7 @@ import com.game.server.world.behavior.base.Message;
 import com.game.server.world.map.GameService;
 import com.game.server.world.object.base.GameObject;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -33,17 +34,27 @@ public abstract class MoveBehaviour extends Behavior
 
 	protected void moveHandler(final MoveMessage moveMessage)
 	{
-		getSelf().move(moveMessage.getX(), moveMessage.getY());
-		GameService.get().getWorldMap().update(getSelf());
 
-		List<GameObject> objects = GameService.get().getWorldMap().findObjects(getSelf().getCollisionBox());
+		// find objects on next move
+		List<GameObject> objects = GameService.get().getWorldMap().findObjects(getSelf().getCollisionBox(
+				getSelf().getX() + moveMessage.getX(),
+				getSelf().getY() + moveMessage.getY()));
+
+		List<GameObject> notPassableObjects = Lists.newArrayList();
 
 		for (GameObject object : objects)
 		{
+
 			// don't collide with myself
 			if (object.equals(getSelf()))
 			{
 				continue;
+			}
+
+			// can i pass through this object?
+			if (!object.getMaterial().isPassable(getSelf()))
+			{
+				notPassableObjects.add(object);
 			}
 
 			// collision enter
@@ -67,6 +78,18 @@ public abstract class MoveBehaviour extends Behavior
 
 				object.tell(new CollisionLeaveMessage(getSelf()), getSelf());
 			}
+		}
+
+		// move my self
+		if (CollectionUtils.isEmpty(notPassableObjects))
+		{
+			getSelf().move(moveMessage.getX(), moveMessage.getY());
+			GameService.get().getWorldMap().update(getSelf());
+		}
+		else
+		{
+			//collision emerges, move to collision point
+			collisionObjects = Lists.newArrayList();
 		}
 
 		collisionObjects = objects;

@@ -16,7 +16,7 @@ public class Wall extends GameObject
 {
 	public Wall(Coordinate position)
 	{
-		setMaterial(new RectangleMaterial(this, Color.gray, 50, 50));
+		setMaterial(new RectangleMaterial(Color.gray, 50, 50, false));
 		setCoordinate(position);
 	}
 

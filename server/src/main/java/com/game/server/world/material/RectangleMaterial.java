@@ -11,32 +11,38 @@ import java.awt.Color;
  */
 public class RectangleMaterial implements Material
 {
-	private final GameObject self;
 
 	private Color color;
 
 	private int width;
 	private int height;
+	private final boolean passable;
 
-	public RectangleMaterial(final GameObject self, final int width, final int height)
+	public RectangleMaterial(final int width, final int height, final boolean passable)
 	{
-		this(self, Color.white, width, height);
+		this(Color.white, width, height, passable);
 	}
 
-	public RectangleMaterial(final GameObject self, final Color color, final int width, final int height)
+	public RectangleMaterial(final Color color, final int width, final int height, final boolean passable)
 	{
-		this.self = self;
 		this.color = color;
 		this.width = width;
 		this.height = height;
+		this.passable = passable;
 	}
 
 	@Override
-	public Envelope getBoundingBox()
+	public Envelope getBoundingBox(double x, double y)
 	{
 		return new Envelope(
-				self.getX() - width * 0.5, self.getX() + width * 0.5,
-				self.getY() - height * 0.5, self.getY() + height * 0.5);
+				x - width * 0.5, x + width * 0.5,
+				y - height * 0.5, y + height * 0.5);
+	}
+
+	@Override
+	public boolean isPassable(GameObject gameObject)
+	{
+		return passable;
 	}
 
 	public Color getColor()

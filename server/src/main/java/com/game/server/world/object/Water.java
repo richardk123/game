@@ -18,7 +18,7 @@ public class Water extends GameObject
 {
 	public Water(Coordinate position)
 	{
-		setMaterial(new RectangleMaterial(this, Color.blue, 100, 250));
+		setMaterial(new RectangleMaterial(Color.blue, 100, 250, true));
 		setCoordinate(position);
 	}
 
