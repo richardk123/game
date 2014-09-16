@@ -6,6 +6,7 @@ package com.game.server.world.object.base;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.BehaviorBuilder;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.base.Message;
 import com.game.server.world.behavior.internal.InternalMessage;
 import com.game.server.world.behavior.internal.ViewBehaviour;
@@ -53,7 +54,7 @@ public abstract class GameObject
 		this.removed = Lists.newArrayList();
 
 		defaultMessageHandler = BehaviorBuilder
-				.match(Behavior.AddBehaviorMessage.class, m -> addBehavior(m.getBehavior()))
+				.match(Behavior.AddBehaviorMessage.class, m -> addBehavior(m.getBehaviorProps()))
 				.match(Behavior.RemoveBehaviorMessage.class, m -> removeBehavior(m.getBehavior()))
 				.build();
 	}
@@ -140,6 +141,7 @@ public abstract class GameObject
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public boolean hasBehavior(Class behavior)
 	{
 		return getBehavior(behavior) != null;
@@ -175,8 +177,10 @@ public abstract class GameObject
 		}
 	}
 
-	private void addBehavior(Behavior behavior)
+	private void addBehavior(BehaviorProps<?> behaviorProps)
 	{
+		Behavior behavior = Behavior.create(this, behaviorProps);
+
 		getBehaviorsLazy().add(behavior);
 		behavior.onCreate();
 	}

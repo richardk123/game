@@ -28,7 +28,7 @@ public class Water extends GameObject
 	{
 		List<Behavior> behaviors = Lists.newArrayList();
 
-		behaviors.add(new SlowBehavior(this, 50));
+		behaviors.add(Behavior.create(this, SlowBehavior.props(50)));
 
 		return behaviors;
 	}

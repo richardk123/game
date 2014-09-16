@@ -2,6 +2,7 @@ package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.BehaviorBuilder;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.debuff.MovementDecreaseDebuff;
 import com.game.server.world.object.base.GameObject;
 
@@ -15,10 +16,13 @@ public class SlowBehavior extends Behavior
 	 */
 	private double decreaseSpeed;
 
-	public SlowBehavior(GameObject self, double decreaseSpeed)
+	public static BehaviorProps<SlowBehavior> props(double decreaseSpeed)
 	{
-		super(self);
+		return BehaviorProps.create(() -> new SlowBehavior(decreaseSpeed));
+	}
 
+	protected SlowBehavior(double decreaseSpeed)
+	{
 		this.decreaseSpeed = decreaseSpeed;
 
 		behaviour(BehaviorBuilder
@@ -31,7 +35,7 @@ public class SlowBehavior extends Behavior
 	{
 		if (object.hasBehavior(MoveBehaviour.class))
 		{
-			object.tell(new AddBehaviorMessage(new MovementDecreaseDebuff(object, decreaseSpeed)), getSelf());
+			object.tell(new AddBehaviorMessage(MovementDecreaseDebuff.props(decreaseSpeed)), getSelf());
 		}
 	}
 

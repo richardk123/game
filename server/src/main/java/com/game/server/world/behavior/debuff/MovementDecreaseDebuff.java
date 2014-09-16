@@ -2,8 +2,8 @@ package com.game.server.world.behavior.debuff;
 
 import com.game.server.world.behavior.MoveBehaviour;
 import com.game.server.world.behavior.base.BehaviorProperty;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.base.Debuff;
-import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
 /**
@@ -20,10 +20,13 @@ public class MovementDecreaseDebuff extends Debuff
 	
 	private BehaviorProperty.PropertyModifier<Double> propertyModifier;
 
-	public MovementDecreaseDebuff(GameObject self, double decreaseSpeed)
+	public static BehaviorProps<MovementDecreaseDebuff> props(double decreaseSpeed)
 	{
-		super(self);
+		return BehaviorProps.create(() -> new MovementDecreaseDebuff(decreaseSpeed));
+	}
 
+	protected MovementDecreaseDebuff(double decreaseSpeed)
+	{
 		this.decreaseSpeed = decreaseSpeed;
 		
 		propertyModifier = input -> input * (decreaseSpeed / 100.0);

@@ -1,8 +1,8 @@
 package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.BehaviorBuilder;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.internal.KeyInputBehavior;
-import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
 import java.awt.event.KeyEvent;
@@ -30,9 +30,14 @@ public class PlayerMoveBehavior extends MoveBehaviour
 
 	private Timer movingTimer;
 
-	public PlayerMoveBehavior(GameObject self, double speed)
+	public static BehaviorProps<PlayerMoveBehavior> props(double movementSpeed)
 	{
-		super(self, speed);
+		return BehaviorProps.create(() -> new PlayerMoveBehavior(movementSpeed));
+	}
+
+	protected PlayerMoveBehavior(double movementSpeed)
+	{
+		super(movementSpeed);
 
 		behaviour(BehaviorBuilder.match(KeyInputBehavior.KeyPressedMessage.class, this::handleKeyPressed)
 								 .match(KeyInputBehavior.KeyReleasedMessage.class, this::handleKeyReleased)

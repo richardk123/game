@@ -27,8 +27,8 @@ public class Player extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<>();
 
-		behaviors.add(new ViewBehaviour(this, 50, 50));
-		behaviors.add(new PlayerMoveBehavior(this, 1));
+		behaviors.add(Behavior.create(this, ViewBehaviour.props(50, 50)));
+		behaviors.add(Behavior.create(this, PlayerMoveBehavior.props(1)));
 
 		return behaviors;
 	}

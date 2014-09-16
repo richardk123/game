@@ -25,10 +25,8 @@ public abstract class MoveBehaviour extends Behavior
 	 */
 	private List<GameObject> collisionObjects = Lists.newArrayList();
 
-	public MoveBehaviour(GameObject self, double movementSpeed)
+	protected MoveBehaviour(double movementSpeed)
 	{
-		super(self);
-
 		this.movementSpeed = new BehaviorProperty<>(movementSpeed);
 	}
 

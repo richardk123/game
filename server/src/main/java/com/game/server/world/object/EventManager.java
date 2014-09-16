@@ -17,7 +17,7 @@ public class EventManager extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<>();
 
-		behaviors.add(new KeyInputBehavior(this));
+		behaviors.add(Behavior.create(this, KeyInputBehavior.props()));
 
 		return behaviors;
 	}

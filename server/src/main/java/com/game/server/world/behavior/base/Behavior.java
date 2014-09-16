@@ -6,18 +6,27 @@ import com.game.server.world.service.GameService;
 import scala.PartialFunction;
 import scala.runtime.BoxedUnit;
 
+import javax.annotation.Nonnull;
+
 /**
  * @author dohnal
  */
 public abstract class Behavior
 {
-	private final GameObject self;
+	private GameObject self;
 	private GameObject currentSender;
 	private PartialFunction<Object, BoxedUnit> behaviour;
 
-	public Behavior(final GameObject self)
+	protected Behavior()
+	{ }
+
+	public static <T extends Behavior> T create(final @Nonnull GameObject self, final @Nonnull BehaviorProps<T> props)
 	{
-		this.self = self;
+		T behavior = props.create();
+
+		behavior.setSelf(self);
+
+		return behavior;
 	}
 
 	public boolean isDefinedAt(final Object message)
@@ -35,6 +44,11 @@ public abstract class Behavior
 
 	public void onDestroy()
 	{ }
+
+	protected void setSelf(GameObject self)
+	{
+		this.self = self;
+	}
 
 	protected GameObject getSender()
 	{
@@ -63,16 +77,16 @@ public abstract class Behavior
 
 	public static final class AddBehaviorMessage extends Message
 	{
-		private Behavior behavior;
+		private BehaviorProps behaviorProps;
 
-		public AddBehaviorMessage(Behavior behavior)
+		public AddBehaviorMessage(BehaviorProps behaviorProps)
 		{
-			this.behavior = behavior;
+			this.behaviorProps = behaviorProps;
 		}
 
-		public Behavior getBehavior()
+		public BehaviorProps getBehaviorProps()
 		{
-			return behavior;
+			return behaviorProps;
 		}
 	}
 

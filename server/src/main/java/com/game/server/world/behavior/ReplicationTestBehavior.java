@@ -2,8 +2,8 @@ package com.game.server.world.behavior;
 
 import com.game.server.world.behavior.base.Behavior;
 import com.game.server.world.behavior.base.BehaviorBuilder;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.internal.ViewBehaviour;
-import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -15,10 +15,13 @@ public class ReplicationTestBehavior extends Behavior
 {
 	private static final Logger LOG = Logger.getLogger(ReplicationTestBehavior.class);
 
-	public ReplicationTestBehavior(GameObject self)
+	public static BehaviorProps<ReplicationTestBehavior> props()
 	{
-		super(self);
+		return BehaviorProps.create(ReplicationTestBehavior::new);
+	}
 
+	protected ReplicationTestBehavior()
+	{
 		behaviour(BehaviorBuilder.match(ViewBehaviour.ViewMessage.class, this::logMessage).build());
 	}
 

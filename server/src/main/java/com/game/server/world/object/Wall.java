@@ -25,9 +25,6 @@ public class Wall extends GameObject
 	{
 		List<Behavior> behaviors = new ArrayList<>();
 
-		//behaviors.add(new ViewBehaviour(this, 70, 70));
-		//behaviors.add(new ReplicationTestBehavior(this));
-
 		return behaviors;
 	}
 }

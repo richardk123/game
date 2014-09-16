@@ -1,6 +1,7 @@
 package com.game.server.world.behavior.internal;
 
 import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.object.base.GameObject;
 import org.apache.log4j.Logger;
 
@@ -18,9 +19,9 @@ public final class KeyInputBehavior extends Behavior implements KeyListener
 
 	private final Set<Integer> pressedKeys = new HashSet<>();
 
-	public KeyInputBehavior(GameObject self)
+	public static BehaviorProps<KeyInputBehavior> props()
 	{
-		super(self);
+		return BehaviorProps.create(KeyInputBehavior::new);
 	}
 
 	@Override

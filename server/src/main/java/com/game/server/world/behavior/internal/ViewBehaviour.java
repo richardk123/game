@@ -1,8 +1,8 @@
 package com.game.server.world.behavior.internal;
 
 import com.game.server.world.behavior.base.Behavior;
+import com.game.server.world.behavior.base.BehaviorProps;
 import com.game.server.world.behavior.base.Message;
-import com.game.server.world.object.base.GameObject;
 import com.vividsolutions.jts.geom.Envelope;
 
 /**
@@ -13,10 +13,13 @@ public final class ViewBehaviour extends Behavior
 	private int width;
 	private int height;
 
-	public ViewBehaviour(GameObject self, int width, int height)
+	public static BehaviorProps<ViewBehaviour> props(int width, int height)
 	{
-		super(self);
+		return BehaviorProps.create(() -> new ViewBehaviour(width, height));
+	}
 
+	protected ViewBehaviour(int width, int height)
+	{
 		this.width = width;
 		this.height = height;
 	}
