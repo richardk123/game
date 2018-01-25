@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+<body>
+
+  <div id="form">
+    <label>Tvoje max:</label>
+    <input type="text" id="max"/>
+    <button id="calc" onclick="calculate()">Spocitej eddieho vyzvu</button>
+  </div>
+  <div id="tableHolder"></div>
+  
+  
+  <script>
+    var resultHtml;
+  
+    function calculate()
+    {
+      var table = document.getElementById("result");
+      if (table)
+      {
+          table.remove();
+      }
+      
+      var weight = document.getElementById("max").value;
+      var max = roundToTen(weight * 0.85);
+      var min = roundToTen(weight * 0.1);
+      
+      var step = closest((max - min) / 9);
+      
+      resultHtml = "<table id='result'>";
+      var array = [];
+      
+      for (i = 1; i <= 9; i++)
+      {
+      	array.push(max - (i * step));
+      }
+      
+      var result = array.slice(0).reverse();
+      result.push(max);
+      result = result.concat(array);
+      
+      result.forEach(renderRow);
+
+      
+      resultHtml += "</table>";
+      
+      document.getElementById("tableHolder").innerHTML = resultHtml;
+    }
+    
+    function renderRow(val, index) 
+    {
+    	resultHtml += "<tr><td>č. " + (index + 1) + ": </td><td>" + val + "kg</td></tr>";
+	}
+    
+    function roundToTen(num)
+    {
+    	return Math.round(num / 10) * 10;
+    }
+
+    function closest(num) 
+    {
+    	var arr = [5, 10, 15, 20, 30, 50];
+        var curr = arr[0];
+        var diff = Math.abs (num - curr);
+        
+        for (var val = 0; val < arr.length; val++) 
+        {
+            var newdiff = Math.abs (num - arr[val]);
+            if (newdiff < diff) 
+            {
+                diff = newdiff;
+                curr = arr[val];
+            }
+        }
+        
+        return curr;
+    }
+            
+  </script>
+  
+  
+</body>
+</html>
